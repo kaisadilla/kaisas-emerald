@@ -1051,10 +1051,10 @@ void Bike_HandleBumpySlopeJump(void)
     }
 }
 
-bool32 IsRunningDisallowed(u8 metatile)
-{
-    if (!gMapHeader.allowRunning || IsRunningDisallowedByMetatile(metatile) == TRUE)
-        return TRUE;
-    else
-        return FALSE;
+bool32 IsRunningDisallowed (u8 metatile) {
+    #if CONF_ALLOW_RUNNING_INDOORS
+        return IsRunningDisallowedByMetatile(metatile) == TRUE;
+    #else
+        return !gMapHeader.allowRunning || IsRunningDisallowedByMetatile(metatile) == TRUE;
+    #endif
 }

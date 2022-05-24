@@ -115,7 +115,7 @@
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "1",
-      "script": "Route101_EventScript_StartBirchRescue"
+      "script": "Route101_Evt_StartBirchRescue_Left"
     },
     {
       "type": "trigger",
@@ -124,7 +124,7 @@
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "1",
-      "script": "Route101_EventScript_StartBirchRescue"
+      "script": "Route101_Evt_StartBirchRescue_Center"
     },
     {
       "type": "trigger",
@@ -205,7 +205,7 @@
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "1",
-      "script": "Route101_EventScript_StartBirchRescue"
+      "script": "Route101_Evt_StartBirchRescue_Right"
     },
     {
       "type": "trigger",

@@ -1,3 +1,11 @@
+Littleroot_EvtItem_Potion::
+	finditem ITEM_POTION
+	end
+
+@@@@@@@@@@@@@@@@@@@@@@@
+@@@ here be dragons @@@
+@@@@@@@@@@@@@@@@@@@@@@@
+
 Route102_EventScript_ItemPotion::
 	finditem ITEM_POTION
 	end

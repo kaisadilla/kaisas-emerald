@@ -1,4 +1,4 @@
-.set LOCALID_TWIN, 1
+.set LOCALID_FOOTPRINTS_MAN, 1
 .set LOCALID_MOM, 4
 .set LOCALID_RIVAL, 7
 .set LOCALID_BIRCH, 8
@@ -43,7 +43,7 @@ LittlerootTown_OnTransition:
 	setflag FLAG_VISITED_LITTLEROOT_TOWN
 	call Common_EventScript_SetupRivalGfxId
 	call_if_eq VAR_LITTLEROOT_INTRO_STATE, 2, LittlerootTown_EventScript_MoveMomToMaysDoor
-	call_if_unset FLAG_RESCUED_BIRCH, LittlerootTown_EventScript_SetTwinPos
+	call_if_unset FLAG_RESCUED_BIRCH, Littleroot_Evt_SetFootprintsManPos
 	call_if_eq VAR_LITTLEROOT_TOWN_STATE, 3, LittlerootTown_EventScript_SetMomStandingInFrontOfDoorPos
 	call_if_eq VAR_LITTLEROOT_HOUSES_STATE_MAY, 4, LittlerootTown_EventScript_SetExitedHouseAfterLatiSSTicketEvent
 	call_if_eq VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 4, LittlerootTown_EventScript_SetExitedHouseAfterLatiSSTicketEvent
@@ -52,6 +52,365 @@ LittlerootTown_OnTransition:
 	call_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 1, LittlerootTown_EventScript_HideMapNamePopup
 	call_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 2, LittlerootTown_EventScript_LeftLabAfterDexUpgrade
 	end
+
+LittlerootTown_OnFrame:
+	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 1, Littleroot_Evt_StepOffTruck_Male
+	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 2, Littleroot_Evt_StepOffTruck_Female
+	map_script_2 VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 1, LittlerootTown_EventScript_BeginDexUpgradeScene
+	.2byte 0
+	
+@ ===================================================== @
+@ =====================  OnEvents ===================== @
+@ ===================================================== @
+@ the position of the footprints' man when he allows you to pass to save Birch.
+Littleroot_Evt_SetFootprintsManPos::
+	goto_if_eq VAR_LITTLEROOT_TOWN_STATE, 0, Littleroot_Evt_SetFootprintsManBlockingPos
+	setobjectxyperm LOCALID_FOOTPRINTS_MAN, 11, 0
+	setobjectmovementtype LOCALID_FOOTPRINTS_MAN, MOVEMENT_TYPE_FACE_UP
+	return
+
+@ the position of the footprints' man when he doesn't allow you to pass.
+Littleroot_Evt_SetFootprintsManBlockingPos::
+	setobjectxyperm LOCALID_FOOTPRINTS_MAN, 12, 2
+	setobjectmovementtype LOCALID_FOOTPRINTS_MAN, MOVEMENT_TYPE_LOOK_AROUND
+	return
+
+@ ==================================================== @
+@ ================= NPC Interactions ================= @
+@ ==================================================== @
+
+Littleroot_EvtNPC_FootprintsMan::
+	lock
+	faceplayer
+	goto_if_set FLAG_ADVENTURE_STARTED, LittlerootTown_EventScript_GoodLuck
+	goto_if_set FLAG_RESCUED_BIRCH, LittlerootTown_EventScript_YouSavedBirch
+	goto_if_ne VAR_LITTLEROOT_TOWN_STATE, 0, Littleroot_Evt_GoSaveBirch
+	msgbox LittlerootTown_Text_IfYouGoInGrassPokemonWillJumpOut, MSGBOX_DEFAULT
+	release
+	end
+
+LittlerootTown_EventScript_FatMan::
+	msgbox Littleroot_Tx_ILostMyPotion, MSGBOX_NPC
+	end
+
+Littleroot_Tx_ILostMyPotion:
+	.string "I think I lost my potion\n"
+	.string "somewhere around here.\p"
+	.string "I've been searching for a while\n"
+	.string "but I haven't found it.\l"
+	.string "Maybe I left it in my PC?$"
+
+Littleroot_EvtNPC_Boy::
+	msgbox Littleroot_Tx_BirchSpendsDaysInLab, MSGBOX_NPC
+	end
+
+Littleroot_Tx_BirchSpendsDaysInLab:
+	.string "Prof. Birch spends days in his LAB\n"
+	.string "studying, then he'll suddenly go out in\l"
+	.string "the wild to do more research…\p"
+	.string "When does Prof. Birch spend time\n"
+	.string "at home?$"
+
+Littleroot_EvtNPC_Elder::
+	msgbox Littleroot_Tx_CanUsePCToStoreItems, MSGBOX_NPC
+	end
+
+Littleroot_Tx_CanUsePCToStoreItems:
+	.string "If you use a PC, you can store items\n"
+	.string "and even Pokémon.\p"
+	.string "I'd never imagine something like that\n"
+	.string "in my younger days!$"
+
+Littleroot_EvtNPC_Twin::
+	msgbox Littleroot_Tx_ILikeThisVillage, MSGBOX_NPC
+	end
+
+Littleroot_Tx_ILikeThisVillage:
+	.string "I like this village.\n"
+	.string "It's a very calm place, nothing ever\l"
+	.string "happens here.\p"
+	.string "But, without Pokémon, I cannot travel\n"
+	.string "to nearby towns.$"
+
+@ ==================================================== @
+@ ================== Trigger events ================== @
+@ ==================================================== @
+
+@ @@ Jump off the truck and welcome by Mom.
+Littleroot_Evt_StepOffTruck_Male::
+	lockall
+	setvar VAR_0x8004, 12 @ brendan's house door x?
+	setvar VAR_0x8005, 20 @ brendan's house door y?
+	call Littleroot_Evt_GoInsideWithMom
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK
+	warpsilent MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F, 8, 8
+	waitstate
+	releaseall
+	end
+
+Littleroot_Evt_StepOffTruck_Female::
+	lockall
+	setvar VAR_0x8004, 25 @ may's house door x?
+	setvar VAR_0x8005, 21 @ may's house door y?
+	call Littleroot_Evt_GoInsideWithMom
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK
+	warpsilent MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F, 2, 8
+	waitstate
+	releaseall
+	end
+
+Littleroot_Evt_GoInsideWithMom::
+	delay 15
+
+	playse SE_LEDGE
+	applymovement OBJ_EVENT_ID_PLAYER, Littleroot_Move_Player_StepOffTruck
+	waitmovement 0
+
+	opendoor VAR_0x8004, VAR_0x8005
+	waitdooranim
+
+	addobject LOCALID_MOM
+	applymovement LOCALID_MOM, Littleroot_Move_MomExitHouse
+	waitmovement 0
+
+	closedoor VAR_0x8004, VAR_0x8005
+	waitdooranim
+	delay 10
+
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, Littleroot_Evt_GoInsideWithMom_MomApproachPlayer_Male
+	call_if_eq VAR_RESULT, FEMALE, Littleroot_Evt_GoInsideWithMom_MomApproachPlayer_Female
+	waitmovement 0
+
+	msgbox LittlerootTown_Text_OurNewHomeLetsGoInside, MSGBOX_DEFAULT
+	closemessage
+
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, Littleroot_Evt_GoInsideWithMom_MomApproachDoor_Male
+	call_if_eq VAR_RESULT, FEMALE, Littleroot_Evt_GoInsideWithMom_MomApproachDoor_Female
+	applymovement OBJ_EVENT_ID_PLAYER, LittlerootTown_Movement_PlayerApproachDoor
+	waitmovement 0
+
+	opendoor VAR_0x8004, VAR_0x8005
+	waitdooranim
+	applymovement LOCALID_MOM, LittlerootTown_Movement_MomEnterHouse
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, Littleroot_Evt_GoInsideWithMom_PlayerEnterHouseMale
+	call_if_eq VAR_RESULT, FEMALE, Littleroot_Evt_GoInsideWithMom_PlayerEnterHouseFemale
+	waitmovement 0
+	
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_MOM_OUTSIDE
+	setvar VAR_LITTLEROOT_INTRO_STATE, 3
+	hideobjectat OBJ_EVENT_ID_PLAYER, 0
+	closedoor VAR_0x8004, VAR_0x8005
+	waitdooranim
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_FAT_MAN
+	clearflag FLAG_HIDE_MAP_NAME_POPUP
+	return
+
+Littleroot_Evt_GoInsideWithMom_MomApproachPlayer_Male::
+	applymovement LOCALID_MOM, Littleroot_Move_Mom_ApproachPlayerAtTruck
+	return
+	
+Littleroot_Evt_GoInsideWithMom_MomApproachPlayer_Female::
+	applymovement LOCALID_MOM, Littleroot_Move_Mom_ApproachPlayerAtTruckLong
+	return
+
+Littleroot_Evt_GoInsideWithMom_MomApproachDoor_Male::
+	applymovement LOCALID_MOM, Littleroot_Move_Mom_ApproachDoor
+	return
+
+Littleroot_Evt_GoInsideWithMom_MomApproachDoor_Female::
+	applymovement LOCALID_MOM, Littleroot_Move_Mom_ApproachDoorLong
+	return
+
+Littleroot_Evt_GoInsideWithMom_PlayerEnterHouseMale::
+	applymovement OBJ_EVENT_ID_PLAYER, Littleroot_Move_Player_EnterHouse
+	return
+
+Littleroot_Evt_GoInsideWithMom_PlayerEnterHouseFemale::
+	applymovement OBJ_EVENT_ID_PLAYER, Littleroot_Move_Player_EnterHouseLong
+	return
+
+Littleroot_Move_MomExitHouse:
+	walk_down
+	step_end
+
+Littleroot_Move_Mom_ApproachPlayerAtTruck:
+	walk_down
+	walk_in_place_faster_left
+	step_end
+
+Littleroot_Move_Mom_ApproachPlayerAtTruckLong:
+	walk_down
+	walk_down
+	walk_down
+	walk_in_place_faster_left
+	step_end
+
+Littleroot_Move_Mom_ApproachDoor:
+	delay_16
+	delay_8
+	walk_up
+	step_end
+
+Littleroot_Move_Mom_ApproachDoorLong:
+	delay_16
+	delay_8
+	walk_up
+	walk_up
+	walk_up
+	step_end
+
+LittlerootTown_Movement_MomEnterHouse:
+	walk_up
+	set_invisible
+	step_end
+
+LittlerootTown_Movement_PlayerApproachDoor:
+	delay_16
+	delay_8
+	walk_right
+	walk_in_place_faster_up
+	step_end
+
+Littleroot_Move_Player_EnterHouse:
+	walk_up
+	walk_up
+	step_end
+
+Littleroot_Move_Player_EnterHouseLong:
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	step_end
+
+Littleroot_Move_Player_StepOffTruck:
+	jump_right
+	delay_16
+	delay_16
+	delay_16
+	step_end
+
+@ @@ Footprints investigator blocks the path before talking to May/Brandon for the first time.
+   @ left -> player passes through the left tile. right -> right tile.
+Littleroot_Evt_BlockPathFootprints_Left::
+	lockall
+	applymovement OBJ_EVENT_ID_PLAYER, Littleroot_Move_Player_StepBack
+	applymovement LOCALID_FOOTPRINTS_MAN, Littleroot_Move_FootprintsMan_StepBackToLeft
+	waitmovement 0
+	msgbox Littleroot_Tx_FootprintsMan_DontComeInHere
+	closemessage
+	applymovement LOCALID_FOOTPRINTS_MAN, Littleroot_Move_FootprintsMan_ReturnFromLeft
+	setobjectmovementtype LOCALID_FOOTPRINTS_MAN, MOVEMENT_TYPE_LOOK_AROUND
+	end
+
+Littleroot_Evt_BlockPathFootprints_Right::
+	lockall
+	applymovement OBJ_EVENT_ID_PLAYER, Littleroot_Move_Player_StepBack
+	applymovement LOCALID_FOOTPRINTS_MAN, Littleroot_Move_FootprintsMan_StepBackToRight
+	waitmovement 0
+	msgbox Littleroot_Tx_FootprintsMan_DontComeInHere
+	closemessage
+	applymovement LOCALID_FOOTPRINTS_MAN, Littleroot_Move_FootprintsMan_ReturnFromRight
+	setobjectmovementtype LOCALID_FOOTPRINTS_MAN, MOVEMENT_TYPE_LOOK_AROUND
+	end
+	
+Littleroot_Move_Player_StepBack:
+	delay_8
+	walk_down
+	step_end
+
+Littleroot_Move_FootprintsMan_StepBackToLeft:
+	walk_fast_left
+	walk_in_place_faster_up
+	lock_facing_direction
+	walk_down
+	unlock_facing_direction
+	step_end
+
+Littleroot_Move_FootprintsMan_StepBackToRight:
+	walk_fast_right
+	walk_in_place_faster_up
+	lock_facing_direction
+	walk_down
+	unlock_facing_direction
+	step_end
+
+Littleroot_Move_FootprintsMan_ReturnFromLeft:
+	walk_right
+	walk_up
+	step_end
+
+Littleroot_Move_FootprintsMan_ReturnFromRight:
+	walk_left
+	walk_up
+	step_end
+
+Littleroot_Tx_FootprintsMan_DontComeInHere:
+	.string "Aaaaah! Wait!\n"
+	.string "Please don't come in here.\p"
+	.string "I just discovered the footprints of\n"
+	.string "a rare Pokémon!\p"
+	.string "Wait until I finish sketching\n"
+	.string "them, okay?$"
+
+@ @@ Footprints investigator asks you for help.
+@ The event triggered by talking to Footprints guy directly.
+Littleroot_Evt_GoSaveBirch::
+	special GetPlayerBigGuyGirlString
+	msgbox Littleroot_Tx_GoSaveBirchTrigger_CanYouGoSee, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_FOOTPRINTS_MAN, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	setvar VAR_LITTLEROOT_TOWN_STATE, 2
+	release
+	end
+
+@ The event triggered by stepping into a trigger.
+Littleroot_Evt_GoSaveBirchTrigger::
+	lockall
+	@applymovement LOCALID_FOOTPRINTS_MAN, Common_Movement_WalkInPlaceFasterRight
+	applymovement LOCALID_FOOTPRINTS_MAN, Common_Movement_FacePlayer
+	waitmovement 0
+	@applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_FaceLeft
+	waitmovement 0
+	special GetPlayerBigGuyGirlString
+	msgbox Littleroot_Tx_GoSaveBirchTrigger_CanYouGoSee, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_FOOTPRINTS_MAN, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	setvar VAR_LITTLEROOT_TOWN_STATE, 2
+	releaseall
+	end
+
+LittlerootTown_EventScript_YouSavedBirch::
+	special GetPlayerBigGuyGirlString
+	msgbox Littleroot_Tx_FootprintsMan_YouSavedBirch, MSGBOX_DEFAULT
+	release
+	end
+
+Littleroot_Tx_GoSaveBirchTrigger_CanYouGoSee:
+	.string "Um, hi\p"
+	.string "I can hear someone screaming outside!\n"
+	.string "I want to go see what's going on,\l"
+	.string "but I'm too scared of wild Pokémon!\p"
+	.string "Can you go see what's happening\n"
+	.string "for me?$"
+
+Littleroot_Tx_FootprintsMan_YouSavedBirch:
+	.string "You saved Prof. Birch!\n"
+	.string "I'm so glad!\p"
+	.string "About the footprints I was\n"
+	.string "investigating before…\p"
+	.string "I think they were my own footprints.\n"
+	.string "Haha…$"
+
+@@@@@@@@@@@@@@@@@@@@@@@
+@@@ here be dragons @@@
+@@@@@@@@@@@@@@@@@@@@@@@
 
 LittlerootTown_EventScript_LeftLabAfterDexUpgrade::
 	setvar VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 3
@@ -76,18 +435,7 @@ LittlerootTown_EventScript_SetExitedHouseAfterLatiSSTicketEvent::
 	return
 
 LittlerootTown_EventScript_MoveMomToMaysDoor::
-	setobjectxyperm LOCALID_MOM, 14, 8
-	return
-
-LittlerootTown_EventScript_SetTwinPos::
-	goto_if_eq VAR_LITTLEROOT_TOWN_STATE, 0, LittlerootTown_EventScript_SetTwinGuardingRoutePos
-	setobjectxyperm LOCALID_TWIN, 10, 1
-	setobjectmovementtype LOCALID_TWIN, MOVEMENT_TYPE_FACE_UP
-	return
-
-LittlerootTown_EventScript_SetTwinGuardingRoutePos::
-	setobjectxyperm LOCALID_TWIN, 7, 2
-	setobjectmovementtype LOCALID_TWIN, MOVEMENT_TYPE_FACE_DOWN
+	setobjectxyperm LOCALID_MOM, 25, 21
 	return
 
 LittlerootTown_EventScript_SetMomStandingInFrontOfDoorPos::
@@ -99,113 +447,12 @@ LittlerootTown_EventScript_SetMomStandingInFrontOfDoorPos::
 	return
 
 LittlerootTown_EventScript_SetMomInFrontOfDoorMale::
-	setobjectxyperm LOCALID_MOM, 5, 9
+	setobjectxyperm LOCALID_MOM, 12, 21
 	return
 
 LittlerootTown_EventScript_SetMomInFrontOfDoorFemale::
-	setobjectxyperm LOCALID_MOM, 14, 9
+	setobjectxyperm LOCALID_MOM, 25, 22
 	return
-
-LittlerootTown_OnFrame:
-	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 1, LittlerootTown_EventScript_StepOffTruckMale
-	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 2, LittlerootTown_EventScript_StepOffTruckFemale
-	map_script_2 VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 1, LittlerootTown_EventScript_BeginDexUpgradeScene
-	.2byte 0
-
-LittlerootTown_EventScript_StepOffTruckMale::
-	lockall
-	setvar VAR_0x8004, 5
-	setvar VAR_0x8005, 8
-	call LittlerootTown_EventScript_GoInsideWithMom
-	setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK
-	warpsilent MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F, 8, 8
-	waitstate
-	releaseall
-	end
-
-LittlerootTown_EventScript_StepOffTruckFemale::
-	lockall
-	setvar VAR_0x8004, 14
-	setvar VAR_0x8005, 8
-	call LittlerootTown_EventScript_GoInsideWithMom
-	setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK
-	warpsilent MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F, 2, 8
-	waitstate
-	releaseall
-	end
-
-LittlerootTown_EventScript_GoInsideWithMom::
-	delay 15
-	playse SE_LEDGE
-	applymovement OBJ_EVENT_ID_PLAYER, LittlerootTown_Movement_PlayerStepOffTruck
-	waitmovement 0
-	opendoor VAR_0x8004, VAR_0x8005
-	waitdooranim
-	addobject LOCALID_MOM
-	applymovement LOCALID_MOM, LittlerootTown_Movement_MomExitHouse
-	waitmovement 0
-	closedoor VAR_0x8004, VAR_0x8005
-	waitdooranim
-	delay 10
-	applymovement LOCALID_MOM, LittlerootTown_Movement_MomApproachPlayerAtTruck
-	waitmovement 0
-	msgbox LittlerootTown_Text_OurNewHomeLetsGoInside, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_MOM, LittlerootTown_Movement_MomApproachDoor
-	applymovement OBJ_EVENT_ID_PLAYER, LittlerootTown_Movement_PlayerApproachDoor
-	waitmovement 0
-	opendoor VAR_0x8004, VAR_0x8005
-	waitdooranim
-	applymovement LOCALID_MOM, LittlerootTown_Movement_MomEnterHouse
-	applymovement OBJ_EVENT_ID_PLAYER, LittlerootTown_Movement_PlayerEnterHouse
-	waitmovement 0
-	setflag FLAG_HIDE_LITTLEROOT_TOWN_MOM_OUTSIDE
-	setvar VAR_LITTLEROOT_INTRO_STATE, 3
-	hideobjectat OBJ_EVENT_ID_PLAYER, 0
-	closedoor VAR_0x8004, VAR_0x8005
-	waitdooranim
-	clearflag FLAG_HIDE_LITTLEROOT_TOWN_FAT_MAN
-	clearflag FLAG_HIDE_MAP_NAME_POPUP
-	return
-
-LittlerootTown_Movement_MomExitHouse:
-	walk_down
-	step_end
-
-LittlerootTown_Movement_MomApproachPlayerAtTruck:
-	walk_down
-	walk_in_place_faster_left
-	step_end
-
-LittlerootTown_Movement_MomApproachDoor:
-	delay_16
-	delay_8
-	walk_up
-	step_end
-
-LittlerootTown_Movement_MomEnterHouse:
-	walk_up
-	set_invisible
-	step_end
-
-LittlerootTown_Movement_PlayerApproachDoor:
-	delay_16
-	delay_8
-	walk_right
-	walk_in_place_faster_up
-	step_end
-
-LittlerootTown_Movement_PlayerEnterHouse:
-	walk_up
-	walk_up
-	step_end
-
-LittlerootTown_Movement_PlayerStepOffTruck:
-	jump_right
-	delay_16
-	delay_16
-	delay_16
-	step_end
 
 LittlerootTown_EventScript_BeginDexUpgradeScene::
 	lockall
@@ -246,40 +493,6 @@ LittlerootTown_EventScript_SetRivalBirchPosForDexUpgradeFemale::
 	setobjectxy LOCALID_BIRCH, 14, 10
 	end
 
-LittlerootTown_EventScript_FatMan::
-	msgbox LittlerootTown_Text_CanUsePCToStoreItems, MSGBOX_NPC
-	end
-
-LittlerootTown_EventScript_Boy::
-	msgbox LittlerootTown_Text_BirchSpendsDaysInLab, MSGBOX_NPC
-	end
-
-LittlerootTown_EventScript_Twin::
-	lock
-	faceplayer
-	goto_if_set FLAG_ADVENTURE_STARTED, LittlerootTown_EventScript_GoodLuck
-	goto_if_set FLAG_RESCUED_BIRCH, LittlerootTown_EventScript_YouSavedBirch
-	goto_if_ne VAR_LITTLEROOT_TOWN_STATE, 0, LittlerootTown_EventScript_GoSaveBirch
-	msgbox LittlerootTown_Text_IfYouGoInGrassPokemonWillJumpOut, MSGBOX_DEFAULT
-	release
-	end
-
-LittlerootTown_EventScript_GoSaveBirch::
-	special GetPlayerBigGuyGirlString
-	msgbox LittlerootTown_Text_CanYouGoSeeWhatsHappening, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_TWIN, Common_Movement_FaceOriginalDirection
-	waitmovement 0
-	setvar VAR_LITTLEROOT_TOWN_STATE, 2
-	release
-	end
-
-LittlerootTown_EventScript_YouSavedBirch::
-	special GetPlayerBigGuyGirlString
-	msgbox LittlerootTown_Text_YouSavedBirch, MSGBOX_DEFAULT
-	release
-	end
-
 LittlerootTown_EventScript_GoodLuck::
 	msgbox LittlerootTown_Text_GoodLuckCatchingPokemon, MSGBOX_DEFAULT
 	release
@@ -287,10 +500,30 @@ LittlerootTown_EventScript_GoodLuck::
 
 LittlerootTown_EventScript_NeedPokemonTriggerLeft::
 	lockall
-	applymovement LOCALID_TWIN, LittlerootTown_Movement_TwinApproachPlayerLeft
+	applymovement LOCALID_FOOTPRINTS_MAN, LittlerootTown_Movement_TwinApproachPlayerLeft
 	waitmovement 0
 	call LittlerootTown_EventScript_DangerousWithoutPokemon
-	applymovement LOCALID_TWIN, LittlerootTown_Movement_TwinReturnLeft
+	applymovement LOCALID_FOOTPRINTS_MAN, LittlerootTown_Movement_TwinReturnLeft
+	waitmovement 0
+	releaseall
+	end
+
+LittlerootTown_EventScript_NeedPokemonTriggerCenter::
+	lockall
+	applymovement LOCALID_FOOTPRINTS_MAN, LittlerootTown_Movement_TwinApproachPlayerRight
+	waitmovement 0
+	call LittlerootTown_EventScript_DangerousWithoutPokemon
+	applymovement LOCALID_FOOTPRINTS_MAN, LittlerootTown_Movement_TwinReturnRight
+	waitmovement 0
+	releaseall
+	end
+
+LittlerootTown_EventScript_NeedPokemonTriggerRight::
+	lockall
+	applymovement LOCALID_FOOTPRINTS_MAN, LittlerootTown_Movement_TwinApproachPlayerRight
+	waitmovement 0
+	call LittlerootTown_EventScript_DangerousWithoutPokemon
+	applymovement LOCALID_FOOTPRINTS_MAN, LittlerootTown_Movement_TwinReturnRight
 	waitmovement 0
 	releaseall
 	end
@@ -298,7 +531,7 @@ LittlerootTown_EventScript_NeedPokemonTriggerLeft::
 LittlerootTown_EventScript_DangerousWithoutPokemon::
 	msgbox LittlerootTown_Text_IfYouGoInGrassPokemonWillJumpOut, MSGBOX_DEFAULT
 	closemessage
-	applymovement LOCALID_TWIN, LittlerootTown_Movement_TwinPushPlayerFromRoute
+	applymovement LOCALID_FOOTPRINTS_MAN, LittlerootTown_Movement_TwinPushPlayerFromRoute
 	applymovement OBJ_EVENT_ID_PLAYER, LittlerootTown_Movement_PushPlayerBackFromRoute
 	waitmovement 0
 	msgbox LittlerootTown_Text_DangerousIfYouDontHavePokemon, MSGBOX_DEFAULT
@@ -343,16 +576,6 @@ LittlerootTown_Movement_PushPlayerBackFromRoute:
 	unlock_facing_direction
 	step_end
 
-LittlerootTown_EventScript_NeedPokemonTriggerRight::
-	lockall
-	applymovement LOCALID_TWIN, LittlerootTown_Movement_TwinApproachPlayerRight
-	waitmovement 0
-	call LittlerootTown_EventScript_DangerousWithoutPokemon
-	applymovement LOCALID_TWIN, LittlerootTown_Movement_TwinReturnRight
-	waitmovement 0
-	releaseall
-	end
-
 LittlerootTown_Movement_TwinApproachPlayerRight:
 	face_right
 	delay_8
@@ -376,21 +599,6 @@ LittlerootTown_Movement_TwinReturnRight:
 	walk_left
 	walk_in_place_faster_down
 	step_end
-
-LittlerootTown_EventScript_GoSaveBirchTrigger::
-	lockall
-	applymovement LOCALID_TWIN, Common_Movement_WalkInPlaceFasterRight
-	waitmovement 0
-	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
-	waitmovement 0
-	special GetPlayerBigGuyGirlString
-	msgbox LittlerootTown_Text_CanYouGoSeeWhatsHappening, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_TWIN, Common_Movement_FaceOriginalDirection
-	waitmovement 0
-	setvar VAR_LITTLEROOT_TOWN_STATE, 2
-	releaseall
-	end
 
 LittlerootTown_EventScript_TownSign::
 	msgbox LittlerootTown_Text_TownSign, MSGBOX_SIGN
@@ -908,7 +1116,6 @@ LittlerootTown_EventScript_GiveRunningShoes::
 	closemessage
 	delay 30
 	return
-
 LittlerootTown_Text_OurNewHomeLetsGoInside:
 	.string "MOM: {PLAYER}, we're here, honey!\p"
 	.string "It must be tiring riding with our things\n"
@@ -957,18 +1164,6 @@ LittlerootTown_Text_ComeHomeIfAnythingHappens:
 	.string "If anything happens, you can come home.\p"
 	.string "Go on, go get them, honey!$"
 
-LittlerootTown_Text_CanUsePCToStoreItems:
-	.string "If you use a PC, you can store items\n"
-	.string "and POKéMON.\p"
-	.string "The power of science is staggering!$"
-
-LittlerootTown_Text_BirchSpendsDaysInLab:
-	.string "PROF. BIRCH spends days in his LAB\n"
-	.string "studying, then he'll suddenly go out in\l"
-	.string "the wild to do more research…\p"
-	.string "When does PROF. BIRCH spend time\n"
-	.string "at home?$"
-
 LittlerootTown_Text_IfYouGoInGrassPokemonWillJumpOut:
 	.string "Um, um, um!\p"
 	.string "If you go outside and go in the grass,\n"
@@ -978,26 +1173,14 @@ LittlerootTown_Text_DangerousIfYouDontHavePokemon:
 	.string "It's dangerous if you don't have\n"
 	.string "your own POKéMON.$"
 
-LittlerootTown_Text_CanYouGoSeeWhatsHappening:
-	.string "Um, hi!\p"
-	.string "There are scary POKéMON outside!\n"
-	.string "I can hear their cries!\p"
-	.string "I want to go see what's going on,\n"
-	.string "but I don't have any POKéMON…\p"
-	.string "Can you go see what's happening\n"
-	.string "for me?$"
-
-LittlerootTown_Text_YouSavedBirch:
-	.string "You saved PROF. BIRCH!\n"
-	.string "I'm so glad!$"
-
 LittlerootTown_Text_GoodLuckCatchingPokemon:
 	.string "Are you going to catch POKéMON?\n"
 	.string "Good luck!$"
 
 LittlerootTown_Text_TownSign:
 	.string "LITTLEROOT TOWN\n"
-	.string "“A town that can't be shaded any hue.”$"
+	.string "“A town that can't be shaded any hue.”\p"
+	.string "{RIGHT_ARROW} Prof. Birch's Laboratory.$"
 
 LittlerootTown_Text_ProfBirchsLab:
 	.string "PROF. BIRCH'S POKéMON LAB$"

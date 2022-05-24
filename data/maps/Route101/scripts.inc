@@ -14,19 +14,56 @@ Route101_OnFrame:
 	map_script_2 VAR_ROUTE101_STATE, 0, Route101_EventScript_HideMapNamePopup
 	.2byte 0
 
+@ ===================================================== @
+@ =====================  OnEvents ===================== @
+@ ===================================================== @
+
 Route101_EventScript_HideMapNamePopup::
 	setflag FLAG_HIDE_MAP_NAME_POPUP
 	setvar VAR_ROUTE101_STATE, 1
 	end
 
-Route101_EventScript_StartBirchRescue::
+@ ==================================================== @
+@ ================== Trigger events ================== @
+@ ==================================================== @
+
+Route101_Evt_StartBirchRescue_Left::
 	lockall
 	playbgm MUS_HELP, TRUE
 	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
 	closemessage
+
 	setobjectxy LOCALID_BIRCH, 0, 36
 	setobjectxy LOCALID_ZIGZAGOON, 0, 37
-	applymovement OBJ_EVENT_ID_PLAYER, Route101_Movement_EnterScene
+
+	applymovement OBJ_EVENT_ID_PLAYER, Route101_Move_Player_EnterScene_Left
+	goto Route101_Evt_StartBirchRescue_AfterWalkingIn
+
+Route101_Evt_StartBirchRescue_Center::
+	lockall
+	playbgm MUS_HELP, TRUE
+	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
+	closemessage
+
+	setobjectxy LOCALID_BIRCH, 0, 36
+	setobjectxy LOCALID_ZIGZAGOON, 0, 37
+
+	applymovement OBJ_EVENT_ID_PLAYER, Route101_Move_Player_EnterScene_Center
+	goto Route101_Evt_StartBirchRescue_AfterWalkingIn
+
+Route101_Evt_StartBirchRescue_Right::
+	lockall
+	playbgm MUS_HELP, TRUE
+	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
+	closemessage
+	
+	setobjectxy LOCALID_BIRCH, 0, 36
+	setobjectxy LOCALID_ZIGZAGOON, 0, 37
+
+	applymovement OBJ_EVENT_ID_PLAYER, Route101_Move_Player_EnterScene_Right
+	goto Route101_Evt_StartBirchRescue_AfterWalkingIn
+
+Route101_Evt_StartBirchRescue_AfterWalkingIn::
 	applymovement LOCALID_BIRCH, Route101_Movement_BirchRunAway1
 	applymovement LOCALID_ZIGZAGOON, Route101_Movement_ZigzagoonChase1
 	waitmovement 0
@@ -43,6 +80,39 @@ Route101_EventScript_StartBirchRescue::
 	setvar VAR_ROUTE101_STATE, 2
 	releaseall
 	end
+
+Route101_Move_Player_EnterScene_Center:
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_in_place_faster_left
+	step_end
+
+Route101_Move_Player_EnterScene_Left:
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_left
+	walk_fast_left
+	walk_in_place_faster_left
+	step_end
+
+Route101_Move_Player_EnterScene_Right:
+	walk_fast_left
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_in_place_faster_left
+	step_end
 
 Route101_EventScript_PreventExitNorth::
 	lockall
@@ -146,17 +216,6 @@ Route101_Movement_ZigzagoonFaceBirch:
 	walk_in_place_fast_left
 	walk_in_place_fast_left
 	walk_in_place_fast_left
-	step_end
-
-Route101_Movement_EnterScene:
-	walk_fast_up
-	walk_fast_up
-	walk_fast_up
-	walk_fast_left
-	walk_fast_left
-	walk_fast_up
-	walk_fast_left
-	walk_in_place_faster_left
 	step_end
 
 Route101_Movement_BirchRunInCircles:

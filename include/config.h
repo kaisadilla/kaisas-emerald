@@ -36,6 +36,8 @@
 #endif
 
 // Kaisa's configuration
+#define CONF_ALLOW_RUNNING_INDOORS TRUE
+
 #define CONF_FIRST_BATTLE_SPECIES  SPECIES_POOCHYENA
 #define CONF_FIRST_BATTLE_LEVEL    4
 
