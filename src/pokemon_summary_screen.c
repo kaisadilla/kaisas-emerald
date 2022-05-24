@@ -391,7 +391,7 @@ static const struct WindowTemplate sSummaryTemplate[] =
 {
     [PSS_LABEL_WINDOW_POKEMON_INFO_TITLE] = {
         .bg = 0,
-        .tilemapLeft = 0,
+        .tilemapLeft = 13,
         .tilemapTop = 0,
         .width = 11,
         .height = 2,
@@ -400,7 +400,7 @@ static const struct WindowTemplate sSummaryTemplate[] =
     },
     [PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE] = {
         .bg = 0,
-        .tilemapLeft = 0,
+        .tilemapLeft = 13,
         .tilemapTop = 0,
         .width = 11,
         .height = 2,
@@ -409,7 +409,7 @@ static const struct WindowTemplate sSummaryTemplate[] =
     },
     [PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE] = {
         .bg = 0,
-        .tilemapLeft = 0,
+        .tilemapLeft = 13,
         .tilemapTop = 0,
         .width = 11,
         .height = 2,
@@ -418,7 +418,7 @@ static const struct WindowTemplate sSummaryTemplate[] =
     },
     [PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE] = {
         .bg = 0,
-        .tilemapLeft = 0,
+        .tilemapLeft = 13,
         .tilemapTop = 0,
         .width = 11,
         .height = 2,
@@ -472,8 +472,8 @@ static const struct WindowTemplate sSummaryTemplate[] =
     },
     [PSS_LABEL_WINDOW_POKEMON_INFO_TYPE] = {
         .bg = 0,
-        .tilemapLeft = 11,
-        .tilemapTop = 6,
+        .tilemapLeft = 0,
+        .tilemapTop = 5,
         .width = 18,
         .height = 2,
         .paletteNum = 6,
@@ -1337,7 +1337,7 @@ static bool8 LoadGraphics(void)
         gMain.state++;
         break;
     case 21:
-        SetTypeIcons();
+        //SetTypeIcons();
         gMain.state++;
         break;
     case 22:
@@ -2414,7 +2414,10 @@ u8 GetMoveSlotToReplace(void)
     return sMoveSlotToReplace;
 }
 
-static void DrawPagination(void) // Updates the pagination dots at the top of the summary screen
+/**
+ * Updates the page indicators at the top of the summary. 
+ */
+static void DrawPagination(void)
 {
     u16 *alloced = Alloc(32);
     u8 i;
@@ -2895,16 +2898,15 @@ static void PrintAOrBButtonIcon(u8 windowId, bool8 bButton, u32 x)
     BlitBitmapToWindow(windowId, (bButton) ? sBButton_Gfx : sBButton_Gfx - sizeof(sBButton_Gfx), x, 0, 16, 16);
 }
 
-static void PrintPageNamesAndStats(void)
-{
+static void PrintPageNamesAndStats (void) {
     int stringXPos;
     int iconXPos;
     int statsXPos;
 
-    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE, gText_PkmnInfo, 2, 1, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE, gText_PkmnSkills, 2, 1, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE, gText_BattleMoves, 2, 1, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE, gText_ContestMoves, 2, 1, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE, gText_PkmnInfo, 0, 0, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE, gText_PkmnSkills, 0, 0, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE, gText_BattleMoves, 0, 0, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE, gText_ContestMoves, 0, 0, 0, 1);
 
     stringXPos = GetStringRightAlignXOffset(FONT_NORMAL, gText_Cancel2, 62);
     iconXPos = stringXPos - 16;
@@ -2928,7 +2930,7 @@ static void PrintPageNamesAndStats(void)
     PrintTextOnWindow(PSS_LABEL_WINDOW_PROMPT_SWITCH, gText_Switch, stringXPos, 1, 0, 0);
 
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL, gText_RentalPkmn, 0, 1, 0, 1);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE, gText_TypeSlash, 0, 1, 0, 0);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE, gText_TypeSlash, 6, 0, 0, 1);
     statsXPos = 6 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_HP4, 42);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT, gText_HP4, statsXPos, 1, 0, 1);
     statsXPos = 6 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_Attack3, 42);
