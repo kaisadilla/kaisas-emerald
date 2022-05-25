@@ -401,17 +401,18 @@ static void SpriteCB_TrainerSlideVertical(struct Sprite *sprite)
 void InitAndLaunchChosenStatusAnimation(bool8 isStatus2, u32 status)
 {
     gBattleSpritesDataPtr->healthBoxesData[gActiveBattler].statusAnimActive = 1;
+    // TODO: If a Pokémon has 2 or more status conditions, all will play the same animation (because this function doesn't specify which one to play each time).
     if (!isStatus2)
     {
-        if (status == STATUS1_FREEZE)
+        if (status & STATUS1_FREEZE)
             LaunchStatusAnimation(gActiveBattler, B_ANIM_STATUS_FRZ);
-        else if (status == STATUS1_POISON || status & STATUS1_TOXIC_POISON)
+        else if (status & STATUS1_TOXIC_POISON)
             LaunchStatusAnimation(gActiveBattler, B_ANIM_STATUS_PSN);
-        else if (status == STATUS1_BURN)
+        else if (status & STATUS1_BURN)
             LaunchStatusAnimation(gActiveBattler, B_ANIM_STATUS_BRN);
         else if (status & STATUS1_SLEEP)
             LaunchStatusAnimation(gActiveBattler, B_ANIM_STATUS_SLP);
-        else if (status == STATUS1_PARALYSIS)
+        else if (status & STATUS1_PARALYSIS)
             LaunchStatusAnimation(gActiveBattler, B_ANIM_STATUS_PRZ);
         else // no animation
             gBattleSpritesDataPtr->healthBoxesData[gActiveBattler].statusAnimActive = 0;

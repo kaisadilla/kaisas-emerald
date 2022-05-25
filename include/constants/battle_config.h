@@ -111,9 +111,15 @@
 #define B_INCOMPATIBILITY_MULTIPLIER     0.75 // The multiplier to apply to a move that has an incompatibility penalty.
 #define B_MOVE_MULTI_TARGET_MULTIPLIER   0.75 // The multiplier to apply to moves when they target more than one Pokémon.
 
+// Status conditions
+#define B_POISON_STARTING_DAMAGE_FRACTION 16 // The damage of poison in the first turn will be equal to 1 / this.
+#define B_BURN_DAMAGE_FRACTION             8 // The damage of burn will be equal to 1 / this.
+#define B_PARALYSIS_SPEED_DIVISION         2 // The speed of a paralyzed pokémon will be equal to speed / this.
+#define B_PARALYSIS_TURNS_PER_TRIGGER      1 // The amount of turns after paralysis triggers before it triggers again (e.g. 1 -> every other turn). Max: 4 (will overflow if this is more than 4).
+#define B_POISON_HEAL_HEALING              8 // The fraction of HP that will be healed by Poison Heal.
+
 
 #define B_CRIT_CHANCE                   GEN_7 // Chances of a critical hit landing. See CalcCritChanceStage.
-#define B_PARALYSIS_SPEED               GEN_7 // In Gen7+, Speed is decreased by 50% instead of 75%.
 #define B_CONFUSION_SELF_DMG_CHANCE     GEN_7 // In Gen7+, confusion has a 33.3% of self-damage, instead of 50%.
 #define B_MULTI_HIT_CHANCE              GEN_7 // In Gen5+, multi-hit moves have different %. See Cmd_setmultihitcounter for values.
 
@@ -127,7 +133,6 @@
 #define B_RECALCULATE_STATS         GEN_7 // In Gen5+, the stats of the Pokémon who participate in battle are recalculated at the end of each battle.
 
 // Damage settings
-#define B_BURN_DAMAGE               GEN_5 // In Gen7+, burn damage is 1/16th of max HP instead of 1/8th.
 #define B_BINDING_DAMAGE            GEN_7 // In Gen6+, binding damage is 1/8 of max HP instead of 1/16. (With Binding Band, 1/6 and 1/8 respectively.)
 #define B_PSYWAVE_DMG               GEN_7 // Psywave's damage formula. See Cmd_psywavedamageeffect.
 #define B_PAYBACK_SWITCH_BOOST      GEN_4 // In Gen5+, if the opponent switches out, Payback's damage will no longer be doubled.

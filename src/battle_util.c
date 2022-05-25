@@ -2677,7 +2677,7 @@ u8 DoBattlerEndTurnEffects(void)
             }
             gBattleStruct->turnEffectsTracker++;
             break;
-        case ENDTURN_POISON:  // poison
+        case ENDTURN_POISON:  // poison // TODO: Replace with frostbitten
             if ((gBattleMons[gActiveBattler].status1 & STATUS1_POISON)
                 && gBattleMons[gActiveBattler].hp != 0)
             {
@@ -2707,30 +2707,34 @@ u8 DoBattlerEndTurnEffects(void)
             gBattleStruct->turnEffectsTracker++;
             break;
         case ENDTURN_BAD_POISON:  // toxic poison
-            if ((gBattleMons[gActiveBattler].status1 & STATUS1_TOXIC_POISON)
-                && gBattleMons[gActiveBattler].hp != 0)
-            {
+            if ((gBattleMons[gActiveBattler].status1 & STATUS1_TOXIC_POISON) && gBattleMons[gActiveBattler].hp != 0) {
                 MAGIC_GUARD_CHECK;
 
-                if (ability == ABILITY_POISON_HEAL)
-                {
-                    if (!BATTLER_MAX_HP(gActiveBattler) && !(gStatuses3[gActiveBattler] & STATUS3_HEAL_BLOCK))
-                    {
-                        gBattleMoveDamage = gBattleMons[gActiveBattler].maxHP / 8;
-                        if (gBattleMoveDamage == 0)
+                if (ability == ABILITY_POISON_HEAL) {
+                    if (!BATTLER_MAX_HP(gActiveBattler) && !(gStatuses3[gActiveBattler] & STATUS3_HEAL_BLOCK)) {
+                        gBattleMoveDamage = gBattleMons[gActiveBattler].maxHP / B_POISON_HEAL_HEALING;
+
+                        if (gBattleMoveDamage == 0) {
                             gBattleMoveDamage = 1;
+                        }
+
                         gBattleMoveDamage *= -1;
                         BattleScriptExecute(BattleScript_PoisonHealActivates);
                         effect++;
                     }
                 }
-                else
-                {
-                    gBattleMoveDamage = gBattleMons[gActiveBattler].maxHP / 16;
-                    if (gBattleMoveDamage == 0)
+                else {
+                    gBattleMoveDamage = gBattleMons[gActiveBattler].maxHP / B_POISON_STARTING_DAMAGE_FRACTION;
+
+                    if (gBattleMoveDamage == 0) {
                         gBattleMoveDamage = 1;
-                    if ((gBattleMons[gActiveBattler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
+                    }
+
+                    // not 16 turns.
+                    if ((gBattleMons[gActiveBattler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) {
                         gBattleMons[gActiveBattler].status1 += STATUS1_TOXIC_TURN(1);
+                    }
+                    
                     gBattleMoveDamage *= (gBattleMons[gActiveBattler].status1 & STATUS1_TOXIC_COUNTER) >> 8;
                     BattleScriptExecute(BattleScript_PoisonTurnDmg);
                     effect++;
@@ -2738,21 +2742,24 @@ u8 DoBattlerEndTurnEffects(void)
             }
             gBattleStruct->turnEffectsTracker++;
             break;
-        case ENDTURN_BURN:  // burn
-            if ((gBattleMons[gActiveBattler].status1 & STATUS1_BURN)
-                && gBattleMons[gActiveBattler].hp != 0)
-            {
+        case ENDTURN_BURN: // Apply Burn status.
+            if ((gBattleMons[gActiveBattler].status1 & STATUS1_BURN) && gBattleMons[gActiveBattler].hp != 0) {
                 MAGIC_GUARD_CHECK;
 
-                gBattleMoveDamage = gBattleMons[gActiveBattler].maxHP / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
-                if (ability == ABILITY_HEATPROOF)
-                {
-                    if (gBattleMoveDamage > (gBattleMoveDamage / 2) + 1) // Record ability if the burn takes less damage than it normally would.
+                gBattleMoveDamage = gBattleMons[gActiveBattler].maxHP / B_BURN_DAMAGE_FRACTION;
+
+                if (ability == ABILITY_HEATPROOF) {
+                    if (gBattleMoveDamage > (gBattleMoveDamage / 2) + 1) {
                         RecordAbilityBattle(gActiveBattler, ABILITY_HEATPROOF);
+                    }
+
                     gBattleMoveDamage /= 2;
                 }
-                if (gBattleMoveDamage == 0)
+
+                if (gBattleMoveDamage == 0) {
                     gBattleMoveDamage = 1;
+                }
+
                 BattleScriptExecute(BattleScript_BurnTurnDmg);
                 effect++;
             }
@@ -3566,14 +3573,22 @@ u8 AtkCanceller_UnableToUseMove(void)
             gBattleStruct->atkCancellerTracker++;
             break;
         case CANCELLER_PARALYSED: // paralysis
-            if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_PARALYSIS) && (Random() % 4) == 0)
-            {
-                gProtectStructs[gBattlerAttacker].prlzImmobility = TRUE;
-                // This is removed in Emerald for some reason
-                //CancelMultiTurnMoves(gBattlerAttacker);
-                gBattlescriptCurrInstr = BattleScript_MoveUsedIsParalyzed;
-                gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
-                effect = 1;
+            if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_PARALYSIS)) {
+                // If this turn is not a paralyz turn, just add one to the turn counter.
+                if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_PARALYZ_COUNTER) < STATUS1_PARALYZ_TURN(B_PARALYSIS_TURNS_PER_TRIGGER)) {
+                    gBattleMons[gBattlerAttacker].status1 += STATUS1_PARALYZ_TURN(1);
+                }
+                // Else, if this turn is a trigger turn, trigger paralysis and reset the counter.
+                else {
+                    gProtectStructs[gBattlerAttacker].prlzImmobility = TRUE;
+                    // This is removed in Emerald for some reason
+                    //CancelMultiTurnMoves(gBattlerAttacker);
+                    gBattlescriptCurrInstr = BattleScript_MoveUsedIsParalyzed;
+                    gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
+                    effect = 1;
+                    
+                    gBattleMons[gBattlerAttacker].status1 &= ~STATUS1_PARALYZ_COUNTER;
+                }
             }
             gBattleStruct->atkCancellerTracker++;
             break;
@@ -4649,7 +4664,7 @@ u8 AbilityBattleEffects(u8 caseID, u8 battler, u16 ability, u8 special, u16 move
                 if ((gBattleMons[battler].status1 & STATUS1_ANY) && (Random() % 3) == 0)
                 {
                 ABILITY_HEAL_MON_STATUS:
-                    if (gBattleMons[battler].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON))
+                    if ((gBattleMons[battler].status1 & STATUS1_POISON) || (gBattleMons[battler].status1 & STATUS1_TOXIC_POISON))
                         StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
                     if (gBattleMons[battler].status1 & STATUS1_SLEEP)
                         StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
@@ -5515,7 +5530,7 @@ u8 AbilityBattleEffects(u8 caseID, u8 battler, u16 ability, u8 special, u16 move
             switch (GetBattlerAbility(battler))
             {
             case ABILITY_IMMUNITY:
-                if (gBattleMons[battler].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON | STATUS1_TOXIC_COUNTER))
+                if (gBattleMons[battler].status1 & (STATUS1_TOXIC_POISON | STATUS1_TOXIC_COUNTER))
                 {
                     StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
                     effect = 1;

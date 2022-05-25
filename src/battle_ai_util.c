@@ -2272,28 +2272,23 @@ static u32 GetTrapDamage(u8 battlerId)
     return damage;
 }
 
-static u32 GetPoisonDamage(u8 battlerId)
-{
+static u32 GetPoisonDamage (u8 battlerId) {
     u32 damage = 0;
-
-    if (AI_GetAbility(battlerId) == ABILITY_POISON_HEAL)
+    if (AI_GetAbility(battlerId) == ABILITY_POISON_HEAL) {
         return damage;
+    }
 
-    if (gBattleMons[battlerId].status1 & STATUS1_POISON)
-    {
-        damage = gBattleMons[battlerId].maxHP / 8;
-        if (damage == 0)
-            damage = 1;
-    }
-    else if (gBattleMons[battlerId].status1 & STATUS1_TOXIC_POISON)
-    {
+    if (gBattleMons[battlerId].status1 & STATUS1_TOXIC_POISON) {
         damage = gBattleMons[battlerId].maxHP / 16;
-        if (damage == 0)
+        if (damage == 0) {
             damage = 1;
-        if ((gBattleMons[battlerId].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
-            gBattleMons[battlerId].status1 += STATUS1_TOXIC_TURN(1);
-        damage *= (gBattleMons[battlerId].status1 & STATUS1_TOXIC_COUNTER) >> 8;
+        }
+        // not turn 16.
+        if ((gBattleMons[battlerId].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) {
+            damage *= (gBattleMons[battlerId].status1 & STATUS1_TOXIC_COUNTER) >> 8;
+        }
     }
+
     return damage;
 }
 

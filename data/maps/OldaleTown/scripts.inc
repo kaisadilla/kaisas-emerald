@@ -14,6 +14,84 @@ OldaleTown_OnTransition:
 	call_if_set FLAG_ADVENTURE_STARTED, OldaleTown_EventScript_SetOldaleState
 	end
 
+	
+@ ==================================================== @
+@ ================== Trigger events ================== @
+@ ==================================================== @
+Oldale_Evt_RivalIsLookingForYou1::
+	lockall
+	applymovement LOCALID_FOOTPRINTS_MAN, Common_Movement_FacePlayer
+
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_SetMomInFrontOfDoorMale
+	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_SetMomInFrontOfDoorFemale
+
+	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin
+	@ both player and twin 6 right, 6 up.
+	@ tell the player "the person should be somewhere up there".
+	return
+
+Oldale_Evt_RivalIsLookingForYou1_TexMale::
+	msgbox Oldate_Tx_SomeoneWasLookingForYouMale
+	return
+Oldale_Evt_RivalIsLookingForYou1_TexMale::
+	msgbox Oldate_Tx_SomeoneWasLookingForYouFemale
+	return
+
+Oldale_Move_Player_GetBehindTwin1:
+	walk_down
+	walk_down
+	walk_right
+	walk_right
+	step_end
+Oldale_Move_Player_GetBehindTwin2:
+	walk_down
+	walk_right
+	walk_right
+	step_end
+Oldale_Move_Player_GetBehindTwin3:
+	walk_right
+	walk_right
+	step_end
+Oldale_Move_Player_GetBehindTwin4:
+	walk_up
+	walk_right
+	walk_right
+	step_end
+Oldale_Move_Player_GetBehindTwin5:
+	walk_up
+	walk_up
+	walk_right
+	walk_right
+	step_end
+
+Oldate_Tx_SomeoneWasLookingForYouMale:
+	.string "Hey, you!\p"
+	.string "This girl was looking for you!\n"
+	.string "I think she went that way,\l"
+	.string "Let me show you.$"
+Oldate_Tx_SomeoneWasLookingForYouFemale:
+	.string "Hey, you!\p"
+	.string "This boy was looking for you!\n"
+	.string "I think he went that way,\l"
+	.string "Let me show you.$"
+
+OldaleTown_EventScript_BlockedPath::
+	lockall
+	applymovement OBJ_EVENT_ID_PLAYER, OldaleTown_Movement_PlayerStepBack
+	applymovement LOCALID_FOOTPRINTS_MAN, OldaleTown_Movement_BackUp
+	waitmovement 0
+	msgbox OldaleTown_Text_WaitDontComeInHere, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_FOOTPRINTS_MAN, OldaleTown_Movement_ReturnToOriginalPosition
+	waitmovement 0
+	releaseall
+	end
+
+@@@@@@@@@@@@@@@@@@@@@@@
+@@@ here be dragons @@@
+@@@@@@@@@@@@@@@@@@@@@@@
+
 @ This script seems pointless because nothing uses VAR_OLDALE_TOWN_STATE
 OldaleTown_EventScript_SetOldaleState::
 	setvar VAR_OLDALE_TOWN_STATE, 1
@@ -200,18 +278,6 @@ OldaleTown_EventScript_FootprintsMan::
 	applymovement LOCALID_FOOTPRINTS_MAN, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	release
-	end
-
-OldaleTown_EventScript_BlockedPath::
-	lockall
-	applymovement OBJ_EVENT_ID_PLAYER, OldaleTown_Movement_PlayerStepBack
-	applymovement LOCALID_FOOTPRINTS_MAN, OldaleTown_Movement_BackUp
-	waitmovement 0
-	msgbox OldaleTown_Text_WaitDontComeInHere, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_FOOTPRINTS_MAN, OldaleTown_Movement_ReturnToOriginalPosition
-	waitmovement 0
-	releaseall
 	end
 
 OldaleTown_EventScript_NotBlockingPath::
