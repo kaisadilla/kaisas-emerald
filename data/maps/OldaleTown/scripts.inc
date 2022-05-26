@@ -1,5 +1,5 @@
 .set LOCALID_MART_EMPLOYEE, 2
-.set LOCALID_FOOTPRINTS_MAN, 3
+.set LOCALID_TWIN, 3
 .set LOCALID_RIVAL, 4
 
 OldaleTown_MapScripts::
@@ -9,34 +9,158 @@ OldaleTown_MapScripts::
 OldaleTown_OnTransition:
 	call Common_EventScript_SetupRivalGfxId
 	setflag FLAG_VISITED_OLDALE_TOWN
-	call_if_unset FLAG_ADVENTURE_STARTED, OldaleTown_EventScript_BlockWestEntrance
+	call_if_unset FLAG_ADVENTURE_STARTED, Oldale_Evt_TwinBlockPath
 	call_if_unset FLAG_RECEIVED_POTION_OLDALE, OldaleTown_EventScript_MoveMartEmployee
 	call_if_set FLAG_ADVENTURE_STARTED, OldaleTown_EventScript_SetOldaleState
 	end
 
+@ ===================================================== @
+@ =====================  OnEvents ===================== @
+@ ===================================================== @
+Oldale_Evt_TwinBlockPath::
+	setobjectxyperm LOCALID_TWIN, 22, 30
+	setobjectmovementtype LOCALID_TWIN, MOVEMENT_TYPE_LOOK_AROUND
+	return
 	
+@ ==================================================== @
+@ ================= NPC Interactions ================= @
+@ ==================================================== @
+Oldale_Evt_Twin::
+	lock
+	faceplayer
+	goto_if_set FLAG_ADVENTURE_STARTED, Oldale_Evt_Twin_NotBlockingPath
+
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, Oldale_Evt_ImLookingForSomeone_Male
+	call_if_eq VAR_RESULT, FEMALE, Oldale_Evt_ImLookingForSomeone_Female
+
+	applymovement LOCALID_TWIN, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	release
+	end
+
+Oldale_Evt_ImLookingForSomeone_Male::
+	msgbox Oldale_Tx_ImLookingForSomeoneMale, MSGBOX_DEFAULT
+	closemessage
+	return
+
+Oldale_Evt_ImLookingForSomeone_Female::
+	msgbox Oldale_Tx_ImLookingForSomeoneFemale, MSGBOX_DEFAULT
+	closemessage
+	return
+
+Oldale_Tx_ImLookingForSomeoneMale:
+	.string "A girl that told me to talk\n"
+	.string "to some boy if I saw him.\p"
+	.string "But I don't know how I'll\n"
+	.string "recognize that boy if I see him!$"
+
+Oldale_Tx_ImLookingForSomeoneFemale:
+	.string "A boy that told me to talk\n"
+	.string "to some girl if I saw her.\p"
+	.string "But I don't know how I'll\n"
+	.string "recognize that girl if I see her!$"
+
+Oldale_Evt_Twin_NotBlockingPath::
+	msgbox OldaleTown_Text_FinishedSketchingFootprints, MSGBOX_DEFAULT
+	release
+	end
+
 @ ==================================================== @
 @ ================== Trigger events ================== @
 @ ==================================================== @
 Oldale_Evt_RivalIsLookingForYou1::
+	call Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove
+	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin1
+	waitmovement 0
+	
+	call Oldale_Evt_RivalIsLookingForYou_AfterPlayerMove
+	end
+
+Oldale_Evt_RivalIsLookingForYou2::
+	call Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove
+	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin2
+	waitmovement 0
+	
+	call Oldale_Evt_RivalIsLookingForYou_AfterPlayerMove
+	end
+
+Oldale_Evt_RivalIsLookingForYou3::
+	call Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove
+	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin3
+	waitmovement 0
+	
+	call Oldale_Evt_RivalIsLookingForYou_AfterPlayerMove
+	end
+
+Oldale_Evt_RivalIsLookingForYou4::
+	call Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove
+	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin4
+	waitmovement 0
+	
+	call Oldale_Evt_RivalIsLookingForYou_AfterPlayerMove
+	end
+
+Oldale_Evt_RivalIsLookingForYou5::
+	call Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove
+	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin5
+	waitmovement 0
+	
+	call Oldale_Evt_RivalIsLookingForYou_AfterPlayerMove
+	end
+
+Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove::
 	lockall
-	applymovement LOCALID_FOOTPRINTS_MAN, Common_Movement_FacePlayer
+	playse SE_PIN
+	applymovement LOCALID_TWIN, Common_Movement_ExclamationMark
+	waitmovement 0
+	applymovement LOCALID_TWIN, Oldale_Move_Twin_NoticePlayer
+	waitmovement 0
 
 	checkplayergender
-	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_SetMomInFrontOfDoorMale
-	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_SetMomInFrontOfDoorFemale
-
-	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin
-	@ both player and twin 6 right, 6 up.
-	@ tell the player "the person should be somewhere up there".
+	call_if_eq VAR_RESULT, MALE, Oldale_Evt_RivalIsLookingForYou_TexMale
+	call_if_eq VAR_RESULT, FEMALE, Oldale_Evt_RivalIsLookingForYou_TexFemale
+	closemessage
 	return
 
-Oldale_Evt_RivalIsLookingForYou1_TexMale::
+Oldale_Evt_RivalIsLookingForYou_AfterPlayerMove::
+	playbgm MUS_FOLLOW_ME, FALSE
+	applymovement LOCALID_TWIN, Oldale_Move_Twin_GuidedToRival
+	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GuidedToRival
+	waitmovement 0
+
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, Oldale_Evt_RivalIsThatWay_TexMale
+	call_if_eq VAR_RESULT, FEMALE, Oldale_Evt_RivalIsThatWay_TexFemale
+	closemessage
+
+	applymovement LOCALID_TWIN, Oldale_Move_Twin_ReturnToBlockingSpot
+	waitmovement 0
+	setobjectxy LOCALID_TWIN, 22, 30
+	setobjectmovementtype LOCALID_TWIN, MOVEMENT_TYPE_LOOK_AROUND
+	fadedefaultbgm
+	return
+
+Oldale_Evt_RivalIsLookingForYou_TexMale::
 	msgbox Oldate_Tx_SomeoneWasLookingForYouMale
 	return
-Oldale_Evt_RivalIsLookingForYou1_TexMale::
+Oldale_Evt_RivalIsLookingForYou_TexFemale::
 	msgbox Oldate_Tx_SomeoneWasLookingForYouFemale
 	return
+
+Oldale_Evt_RivalIsThatWay_TexMale::
+	msgbox Oldate_Tx_TheyAreThatWayMale
+	return
+Oldale_Evt_RivalIsThatWay_TexFemale::
+	msgbox Oldate_Tx_TheyAreThatWayFemale
+	return
+
+Oldale_Move_Twin_NoticePlayer:
+	delay_8
+    face_left
+	disable_jump_landing_ground_effect
+	jump_in_place_left
+	step_end
 
 Oldale_Move_Player_GetBehindTwin1:
 	walk_down
@@ -44,20 +168,24 @@ Oldale_Move_Player_GetBehindTwin1:
 	walk_right
 	walk_right
 	step_end
+
 Oldale_Move_Player_GetBehindTwin2:
 	walk_down
 	walk_right
 	walk_right
 	step_end
+
 Oldale_Move_Player_GetBehindTwin3:
 	walk_right
 	walk_right
 	step_end
+
 Oldale_Move_Player_GetBehindTwin4:
 	walk_up
 	walk_right
 	walk_right
 	step_end
+
 Oldale_Move_Player_GetBehindTwin5:
 	walk_up
 	walk_up
@@ -65,25 +193,83 @@ Oldale_Move_Player_GetBehindTwin5:
 	walk_right
 	step_end
 
+Oldale_Move_Twin_GuidedToRival:
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+    walk_right
+	face_up
+	step_end
+
+Oldale_Move_Player_GuidedToRival:
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	face_up
+	step_end
+
+Oldale_Move_Twin_ReturnToBlockingSpot:
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+	walk_left
+	walk_left
+	step_end
+
 Oldate_Tx_SomeoneWasLookingForYouMale:
 	.string "Hey, you!\p"
-	.string "This girl was looking for you!\n"
-	.string "I think she went that way,\l"
+	.string "A girl told me to look out for\n"
+	.string "some boy. I think it may be you!\p"
+	.string "She went that way I think,\n"
 	.string "Let me show you.$"
 Oldate_Tx_SomeoneWasLookingForYouFemale:
 	.string "Hey, you!\p"
-	.string "This boy was looking for you!\n"
-	.string "I think he went that way,\l"
+	.string "A boy told me to look out for\n"
+	.string "some girl. I think it may be you!\p"
+	.string "She went that way I think,\n"
 	.string "Let me show you.$"
+Oldate_Tx_TheyAreThatWayMale:
+	.string "Yes, she went in that direction.\n"
+	.string "She looked happy that you'd come.$"
+Oldate_Tx_TheyAreThatWayFemale:
+	.string "Yes, he went in that direction.\n"
+	.string "He looked happy that you'd come.$"
 
 OldaleTown_EventScript_BlockedPath::
 	lockall
 	applymovement OBJ_EVENT_ID_PLAYER, OldaleTown_Movement_PlayerStepBack
-	applymovement LOCALID_FOOTPRINTS_MAN, OldaleTown_Movement_BackUp
+	applymovement LOCALID_TWIN, OldaleTown_Movement_BackUp
 	waitmovement 0
 	msgbox OldaleTown_Text_WaitDontComeInHere, MSGBOX_DEFAULT
 	closemessage
-	applymovement LOCALID_FOOTPRINTS_MAN, OldaleTown_Movement_ReturnToOriginalPosition
+	applymovement LOCALID_TWIN, OldaleTown_Movement_ReturnToOriginalPosition
 	waitmovement 0
 	releaseall
 	end
@@ -95,11 +281,6 @@ OldaleTown_EventScript_BlockedPath::
 @ This script seems pointless because nothing uses VAR_OLDALE_TOWN_STATE
 OldaleTown_EventScript_SetOldaleState::
 	setvar VAR_OLDALE_TOWN_STATE, 1
-	return
-
-OldaleTown_EventScript_BlockWestEntrance::
-	setobjectxyperm LOCALID_FOOTPRINTS_MAN, 1, 11
-	setobjectmovementtype LOCALID_FOOTPRINTS_MAN, MOVEMENT_TYPE_FACE_LEFT
 	return
 
 OldaleTown_EventScript_MoveMartEmployee::
@@ -269,22 +450,6 @@ OldaleTown_Movement_Unknown2:
 	walk_up
 	step_end
 
-OldaleTown_EventScript_FootprintsMan::
-	lock
-	faceplayer
-	goto_if_set FLAG_ADVENTURE_STARTED, OldaleTown_EventScript_NotBlockingPath
-	msgbox OldaleTown_Text_DiscoveredFootprints, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_FOOTPRINTS_MAN, Common_Movement_FaceOriginalDirection
-	waitmovement 0
-	release
-	end
-
-OldaleTown_EventScript_NotBlockingPath::
-	msgbox OldaleTown_Text_FinishedSketchingFootprints, MSGBOX_DEFAULT
-	release
-	end
-
 OldaleTown_EventScript_Rival::
 	lockall
 	applymovement LOCALID_RIVAL, Common_Movement_FacePlayer
@@ -434,12 +599,6 @@ OldaleTown_Text_PotionExplanation:
 OldaleTown_Text_WaitDontComeInHere:
 	.string "Aaaaah! Wait!\n"
 	.string "Please don't come in here.\p"
-	.string "I just discovered the footprints of\n"
-	.string "a rare POKéMON!\p"
-	.string "Wait until I finish sketching\n"
-	.string "them, okay?$"
-
-OldaleTown_Text_DiscoveredFootprints:
 	.string "I just discovered the footprints of\n"
 	.string "a rare POKéMON!\p"
 	.string "Wait until I finish sketching\n"

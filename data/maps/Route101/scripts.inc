@@ -28,30 +28,24 @@ Route101_EventScript_HideMapNamePopup::
 @ ==================================================== @
 
 Route101_Evt_StartBirchRescue_Left::
-	lockall
-	playbgm MUS_HELP, TRUE
-	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
-	closemessage
-
-	setobjectxy LOCALID_BIRCH, 0, 36
-	setobjectxy LOCALID_ZIGZAGOON, 0, 37
-
+	call Route101_Evt_StartBirchRescue_BeforeWalkingIn
 	applymovement OBJ_EVENT_ID_PLAYER, Route101_Move_Player_EnterScene_Left
-	goto Route101_Evt_StartBirchRescue_AfterWalkingIn
+	call Route101_Evt_StartBirchRescue_AfterWalkingIn
+	end
 
 Route101_Evt_StartBirchRescue_Center::
-	lockall
-	playbgm MUS_HELP, TRUE
-	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
-	closemessage
-
-	setobjectxy LOCALID_BIRCH, 0, 36
-	setobjectxy LOCALID_ZIGZAGOON, 0, 37
-
+	call Route101_Evt_StartBirchRescue_BeforeWalkingIn
 	applymovement OBJ_EVENT_ID_PLAYER, Route101_Move_Player_EnterScene_Center
-	goto Route101_Evt_StartBirchRescue_AfterWalkingIn
+	call Route101_Evt_StartBirchRescue_AfterWalkingIn
+	end
 
 Route101_Evt_StartBirchRescue_Right::
+	call Route101_Evt_StartBirchRescue_BeforeWalkingIn
+	applymovement OBJ_EVENT_ID_PLAYER, Route101_Move_Player_EnterScene_Right
+	call Route101_Evt_StartBirchRescue_AfterWalkingIn
+	end
+
+Route101_Evt_StartBirchRescue_BeforeWalkingIn::
 	lockall
 	playbgm MUS_HELP, TRUE
 	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
@@ -59,9 +53,7 @@ Route101_Evt_StartBirchRescue_Right::
 	
 	setobjectxy LOCALID_BIRCH, 0, 36
 	setobjectxy LOCALID_ZIGZAGOON, 0, 37
-
-	applymovement OBJ_EVENT_ID_PLAYER, Route101_Move_Player_EnterScene_Right
-	goto Route101_Evt_StartBirchRescue_AfterWalkingIn
+	return
 
 Route101_Evt_StartBirchRescue_AfterWalkingIn::
 	applymovement LOCALID_BIRCH, Route101_Movement_BirchRunAway1

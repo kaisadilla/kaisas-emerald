@@ -1925,6 +1925,10 @@ s32 CalcCritChanceStage(u8 battlerAtk, u8 battlerDef, u32 move, bool32 recordAbi
         critChance += 20;
     }
 
+    if (critChance >= 100) {
+        critChance = 100;
+    }
+
     return critChance;
 }
 #undef BENEFITS_FROM_LEEK

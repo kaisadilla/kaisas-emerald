@@ -1,32 +1,39 @@
 .set LOCALID_RIVAL, 2
 
 Route103_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, Route103_OnTransition
-	map_script MAP_SCRIPT_ON_LOAD, Route103_OnLoad
+	map_script MAP_SCRIPT_ON_TRANSITION, Route2_OnTransition
+	map_script MAP_SCRIPT_ON_LOAD, Route2_OnLoad
 	.byte 0
 
-Route103_OnTransition:
+Route2_OnTransition:
 	call Common_EventScript_SetupRivalGfxId
 	call ProfBirch_EventScript_UpdateLocation
 	end
 
-Route103_OnLoad:
-	call_if_set FLAG_SYS_GAME_CLEAR, Route103_EventScript_OpenAlteringCave
+Route2_OnLoad:
+	call_if_set FLAG_SYS_GAME_CLEAR, Route2_EventScript_OpenAlteringCave
 	end
 
-Route103_EventScript_OpenAlteringCave::
+@ ===================================================== @
+@ =====================  OnEvents ===================== @
+@ ===================================================== @
+
+Route2_EventScript_OpenAlteringCave::
 	setmetatile 45, 5, METATILE_General_CaveEntrance_Top, TRUE
 	setmetatile 45, 6, METATILE_General_CaveEntrance_Bottom, FALSE
 	return
 
-Route103_EventScript_Rival::
+@ ==================================================== @
+@ ================= NPC Interactions ================= @
+@ ==================================================== @
+Route2_Evt_Rival::
 	lockall
 	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, Route103_EventScript_RivalMay
-	goto_if_eq VAR_RESULT, FEMALE, Route103_EventScript_RivalBrendan
+	goto_if_eq VAR_RESULT, MALE, Route2_Evt_RivalMay
+	goto_if_eq VAR_RESULT, FEMALE, Route2_Evt_RivalBrendan
 	end
 
-Route103_EventScript_RivalMay::
+Route2_Evt_RivalMay::
 	msgbox Route103_Text_MayRoute103Pokemon, MSGBOX_DEFAULT
 	closemessage
 	playbgm MUS_ENCOUNTER_MAY, TRUE
@@ -38,12 +45,12 @@ Route103_EventScript_RivalMay::
 	waitmovement 0
 	msgbox Route103_Text_MayLetsBattle, MSGBOX_DEFAULT
 	switch VAR_STARTER_MON
-	case 0, Route103_EventScript_StartMayBattleTreecko
-	case 1, Route103_EventScript_StartMayBattleTorchic
-	case 2, Route103_EventScript_StartMayBattleMudkip
+	case 0, Route2_Evt_StartMayBattleTreecko
+	case 1, Route2_Evt_StartMayBattleTorchic
+	case 2, Route2_Evt_StartMayBattleMudkip
 	end
 
-Route103_EventScript_RivalBrendan::
+Route2_Evt_RivalBrendan::
 	msgbox Route103_Text_BrendanRoute103Pokemon, MSGBOX_DEFAULT
 	closemessage
 	playbgm MUS_ENCOUNTER_BRENDAN, TRUE
@@ -55,90 +62,90 @@ Route103_EventScript_RivalBrendan::
 	waitmovement 0
 	msgbox Route103_Text_BrendanLetsBattle, MSGBOX_DEFAULT
 	switch VAR_STARTER_MON
-	case 0, Route103_EventScript_StartBrendanBattleTreecko
-	case 1, Route103_EventScript_StartBrendanBattleTorchic
-	case 2, Route103_EventScript_StartBrendanBattleMudkip
+	case 0, Route2_Evt_StartBrendanBattleTreecko
+	case 1, Route2_Evt_StartBrendanBattleTorchic
+	case 2, Route2_Evt_StartBrendanBattleMudkip
 	end
 
-Route103_EventScript_StartMayBattleTreecko::
+Route2_Evt_StartMayBattleTreecko::
 	trainerbattle_no_intro TRAINER_MAY_ROUTE_103_TREECKO, Route103_Text_MayDefeated
-	goto Route103_EventScript_AfterMayBattle
+	goto Route2_Evt_AfterMayBattle
 	end
 
-Route103_EventScript_StartMayBattleTorchic::
+Route2_Evt_StartMayBattleTorchic::
 	trainerbattle_no_intro TRAINER_MAY_ROUTE_103_TORCHIC, Route103_Text_MayDefeated
-	goto Route103_EventScript_AfterMayBattle
+	goto Route2_Evt_AfterMayBattle
 	end
 
-Route103_EventScript_StartMayBattleMudkip::
+Route2_Evt_StartMayBattleMudkip::
 	trainerbattle_no_intro TRAINER_MAY_ROUTE_103_MUDKIP, Route103_Text_MayDefeated
-	goto Route103_EventScript_AfterMayBattle
+	goto Route2_Evt_AfterMayBattle
 	end
 
-Route103_EventScript_StartBrendanBattleTreecko::
+Route2_Evt_StartBrendanBattleTreecko::
 	trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_103_TREECKO, Route103_Text_BrendanDefeated
-	goto Route103_EventScript_AfterBrendanBattle
+	goto Route2_Evt_AfterBrendanBattle
 	end
 
-Route103_EventScript_StartBrendanBattleTorchic::
+Route2_Evt_StartBrendanBattleTorchic::
 	trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_103_TORCHIC, Route103_Text_BrendanDefeated
-	goto Route103_EventScript_AfterBrendanBattle
+	goto Route2_Evt_AfterBrendanBattle
 	end
 
-Route103_EventScript_StartBrendanBattleMudkip::
+Route2_Evt_StartBrendanBattleMudkip::
 	trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_103_MUDKIP, Route103_Text_BrendanDefeated
-	goto Route103_EventScript_AfterBrendanBattle
+	goto Route2_Evt_AfterBrendanBattle
 	end
 
-Route103_EventScript_AfterMayBattle::
+Route2_Evt_AfterMayBattle::
 	msgbox Route103_Text_MayTimeToHeadBack, MSGBOX_DEFAULT
-	goto Route103_EventScript_RivalExit
+	goto Route2_Evt_RivalExit
 	end
 
-Route103_EventScript_AfterBrendanBattle::
+Route2_Evt_AfterBrendanBattle::
 	msgbox Route103_Text_BrendanTimeToHeadBack, MSGBOX_DEFAULT
-	goto Route103_EventScript_RivalExit
+	goto Route2_Evt_RivalExit
 	end
 
-Route103_EventScript_RivalExit::
+Route2_Evt_RivalExit::
 	closemessage
 	switch VAR_FACING
-	case DIR_SOUTH, Route103_EventScript_RivalExitFacingSouth
-	case DIR_NORTH, Route103_EventScript_RivalExitFacingNorth
-	case DIR_WEST, Route103_EventScript_RivalExitFacingEastOrWest
-	case DIR_EAST, Route103_EventScript_RivalExitFacingEastOrWest
+	case DIR_SOUTH, Route2_Evt_RivalExitFacingSouth
+	case DIR_NORTH, Route2_Evt_RivalExitFacingNorth
+	case DIR_WEST, Route2_Evt_RivalExitFacingEastOrWest
+	case DIR_EAST, Route2_Evt_RivalExitFacingEastOrWest
 	end
 
-Route103_EventScript_RivalExitFacingNorth::
+Route2_Evt_RivalExitFacingNorth::
 	applymovement OBJ_EVENT_ID_PLAYER, Route103_Movement_WatchRivalExitFacingNorth
 	applymovement LOCALID_RIVAL, Route103_Movement_RivalExitFacingNorth1
 	waitmovement 0
 	playse SE_LEDGE
-	applymovement LOCALID_RIVAL, Route103_EventScript_RivalExitFacingNorth2
+	applymovement LOCALID_RIVAL, Route2_Evt_RivalExitFacingNorth2
 	waitmovement 0
-	goto Route103_EventScript_RivalEnd
+	goto Route2_Evt_RivalEnd
 	end
 
-Route103_EventScript_RivalExitFacingEastOrWest::
+Route2_Evt_RivalExitFacingEastOrWest::
 	applymovement OBJ_EVENT_ID_PLAYER, Route103_Movement_WatchRivalExitFacingEastOrWest
 	applymovement LOCALID_RIVAL, Route103_Movement_RivalExit1
 	waitmovement 0
 	playse SE_LEDGE
 	applymovement LOCALID_RIVAL, Route103_Movement_RivalExit2
 	waitmovement 0
-	goto Route103_EventScript_RivalEnd
+	goto Route2_Evt_RivalEnd
 	end
 
-Route103_EventScript_RivalExitFacingSouth::
+Route2_Evt_RivalExitFacingSouth::
 	applymovement LOCALID_RIVAL, Route103_Movement_RivalExit1
 	waitmovement 0
 	playse SE_LEDGE
 	applymovement LOCALID_RIVAL, Route103_Movement_RivalExit2
 	waitmovement 0
-	goto Route103_EventScript_RivalEnd
+	goto Route2_Evt_RivalEnd
 	end
 
-Route103_EventScript_RivalEnd::
+Route2_Evt_RivalEnd::
 	removeobject LOCALID_RIVAL
 	setvar VAR_BIRCH_LAB_STATE, 4
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_RIVAL
@@ -150,12 +157,22 @@ Route103_EventScript_RivalEnd::
 	releaseall
 	end
 
+
+@ ==================================================== @
+@ ================== Trigger events ================== @
+@ ==================================================== @
+
+
+@@@@@@@@@@@@@@@@@@@@@@@
+@@@ here be dragons @@@
+@@@@@@@@@@@@@@@@@@@@@@@
+
 Route103_Movement_RivalExitFacingNorth1:
 	walk_left
 	walk_down
 	step_end
 
-Route103_EventScript_RivalExitFacingNorth2:
+Route2_Evt_RivalExitFacingNorth2:
 	jump_2_down
 	delay_16
 	walk_down
@@ -290,7 +307,10 @@ Route103_EventScript_Isabelle::
 
 Route103_Text_MayRoute103Pokemon:
 	.string "MAY: Let's see… The POKéMON found\n"
-	.string "on ROUTE 103 include…$"
+	.string "on Route 2 include Purrloin and\l"
+	.string "Pidgey.\p"
+	.string "I didn't know Pidgey\n"
+	.string "lived in this route…$"
 
 Route103_Text_MayLetsBattle:
 	.string "Oh, hi, {PLAYER}{KUN}!\p"
@@ -316,8 +336,9 @@ Route103_Text_MayTimeToHeadBack:
 	.string "the LAB.$"
 
 Route103_Text_BrendanRoute103Pokemon:
-	.string "BRENDAN: Okay, so it's this one and\n"
-	.string "that one that live on ROUTE 103…$"
+	.string "BRENDAN: Okay, so Taillow and Pidgey\n"
+	.string "live on Route 2.\p"
+	.string "Never saw a Pidgey here before…$"
 
 Route103_Text_BrendanLetsBattle:
 	.string "Hey, it's {PLAYER}!\p"
