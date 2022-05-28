@@ -15282,31 +15282,33 @@ FuryCutterStrongest:
 
 Move_SELF_DESTRUCT:
 	loadspritegfx ANIM_TAG_EXPLOSION
-	createvisualtask AnimTask_BlendBattleAnimPal, 10, 2, 1, 0, 9, RGB_RED
-	createvisualtask AnimTask_ShakeMon2, 5, 4, 6, 0, 38, 1
-	createvisualtask AnimTask_ShakeMon2, 5, 5, 6, 0, 38, 1
-	createvisualtask AnimTask_ShakeMon2, 5, 6, 6, 0, 38, 1
-	createvisualtask AnimTask_ShakeMon2, 5, 7, 6, 0, 38, 1
-	createvisualtask AnimTask_ShakeMon2, 5, 8, 6, 0, 38, 1
-	call SelfDestructExplode
-	call SelfDestructExplode
+	createsprite gComplexPaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, 1, 8, 9, RGB(26, 8, 8), 8, RGB_BLACK, 8
+	createvisualtask AnimTask_ShakeMon2, 5, 4, 8, 0, 40, 1
+	createvisualtask AnimTask_ShakeMon2, 5, 5, 8, 0, 40, 1
+	createvisualtask AnimTask_ShakeMon2, 5, 6, 8, 0, 40, 1
+	createvisualtask AnimTask_ShakeMon2, 5, 7, 8, 0, 40, 1
+	createvisualtask AnimTask_ShakeMon2, 5, 8, 8, 0, 40, 1
+	call Explosion1
+	call Explosion1
 	waitforvisualfinish
-	createvisualtask AnimTask_BlendBattleAnimPal, 10, 2, 1, 9, 0, RGB_RED
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, 1, 1, 16, 16, RGB_WHITE
+	delay 50
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, 1, 3, 16, 0, RGB_WHITE
 	end
 SelfDestructExplode:
-	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 1
 	delay 6
-	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 24, -24, 0, 1
 	delay 6
-	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, -16, 16, 0, 1
 	delay 6
-	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, -24, -12, 0, 1
 	delay 6
-	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 16, 16, 0, 1
 	delay 6
 	return
@@ -15448,33 +15450,31 @@ RisingWaterHitEffect:
 
 Move_EXPLOSION:
 	loadspritegfx ANIM_TAG_EXPLOSION
-	createsprite gComplexPaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, 1, 8, 9, RGB(26, 8, 8), 8, RGB_BLACK, 8
-	createvisualtask AnimTask_ShakeMon2, 5, 4, 8, 0, 40, 1
-	createvisualtask AnimTask_ShakeMon2, 5, 5, 8, 0, 40, 1
-	createvisualtask AnimTask_ShakeMon2, 5, 6, 8, 0, 40, 1
-	createvisualtask AnimTask_ShakeMon2, 5, 7, 8, 0, 40, 1
-	createvisualtask AnimTask_ShakeMon2, 5, 8, 8, 0, 40, 1
-	call Explosion1
-	call Explosion1
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, 2, 1, 0, 9, RGB_RED
+	createvisualtask AnimTask_ShakeMon2, 5, 4, 6, 0, 38, 1
+	createvisualtask AnimTask_ShakeMon2, 5, 5, 6, 0, 38, 1
+	createvisualtask AnimTask_ShakeMon2, 5, 6, 6, 0, 38, 1
+	createvisualtask AnimTask_ShakeMon2, 5, 7, 6, 0, 38, 1
+	createvisualtask AnimTask_ShakeMon2, 5, 8, 6, 0, 38, 1
+	call SelfDestructExplode
+	call SelfDestructExplode
 	waitforvisualfinish
-	createvisualtask AnimTask_BlendBattleAnimPal, 10, 1, 1, 16, 16, RGB_WHITE
-	delay 50
-	createvisualtask AnimTask_BlendBattleAnimPal, 10, 1, 3, 16, 0, RGB_WHITE
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, 2, 1, 9, 0, RGB_RED
 	end
 Explosion1:
-	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_ATTACKER
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 1
 	delay 6
-	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_ATTACKER
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 24, -24, 0, 1
 	delay 6
-	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_ATTACKER
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, -16, 16, 0, 1
 	delay 6
-	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_ATTACKER
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, -24, -12, 0, 1
 	delay 6
-	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_ATTACKER
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 16, 16, 0, 1
 	delay 6
 	return

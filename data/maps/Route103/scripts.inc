@@ -110,37 +110,28 @@ Route2_Evt_AfterBrendanBattle::
 Route2_Evt_RivalExit::
 	closemessage
 	switch VAR_FACING
-	case DIR_SOUTH, Route2_Evt_RivalExitFacingSouth
-	case DIR_NORTH, Route2_Evt_RivalExitFacingNorth
-	case DIR_WEST, Route2_Evt_RivalExitFacingEastOrWest
-	case DIR_EAST, Route2_Evt_RivalExitFacingEastOrWest
+	case DIR_SOUTH, Route2_Evt_RivalExitNormal
+	case DIR_NORTH, Route2_Evt_RivalExitNormal
+	case DIR_WEST, Route2_Evt_RivalExitNormal
+	case DIR_EAST, Route2_Evt_RivalExitDodgePlayer
 	end
 
-Route2_Evt_RivalExitFacingNorth::
-	applymovement OBJ_EVENT_ID_PLAYER, Route103_Movement_WatchRivalExitFacingNorth
-	applymovement LOCALID_RIVAL, Route103_Movement_RivalExitFacingNorth1
+Route2_Evt_RivalExitNormal::
+	applymovement OBJ_EVENT_ID_PLAYER, Route2_Move_Player_WatchRivalExit1
+	applymovement LOCALID_RIVAL, Route2_Move_Rival_ExitNormal
 	waitmovement 0
 	playse SE_LEDGE
-	applymovement LOCALID_RIVAL, Route2_Evt_RivalExitFacingNorth2
+	applymovement LOCALID_RIVAL, Route2_Move_Rival_Exit2
 	waitmovement 0
 	goto Route2_Evt_RivalEnd
 	end
 
-Route2_Evt_RivalExitFacingEastOrWest::
-	applymovement OBJ_EVENT_ID_PLAYER, Route103_Movement_WatchRivalExitFacingEastOrWest
-	applymovement LOCALID_RIVAL, Route103_Movement_RivalExit1
+Route2_Evt_RivalExitDodgePlayer::
+	applymovement OBJ_EVENT_ID_PLAYER, Route2_Move_Player_WatchRivalExit1
+	applymovement LOCALID_RIVAL, Route2_Move_Rival_ExitDodgePlayer
 	waitmovement 0
 	playse SE_LEDGE
-	applymovement LOCALID_RIVAL, Route103_Movement_RivalExit2
-	waitmovement 0
-	goto Route2_Evt_RivalEnd
-	end
-
-Route2_Evt_RivalExitFacingSouth::
-	applymovement LOCALID_RIVAL, Route103_Movement_RivalExit1
-	waitmovement 0
-	playse SE_LEDGE
-	applymovement LOCALID_RIVAL, Route103_Movement_RivalExit2
+	applymovement LOCALID_RIVAL, Route2_Move_Rival_Exit2
 	waitmovement 0
 	goto Route2_Evt_RivalEnd
 	end
@@ -157,6 +148,38 @@ Route2_Evt_RivalEnd::
 	releaseall
 	end
 
+Route2_Move_Rival_ExitNormal:
+	walk_left
+	walk_left
+	walk_left
+	walk_down
+	walk_down
+	walk_down
+	step_end
+
+Route2_Move_Rival_ExitDodgePlayer:
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	walk_down
+	walk_down
+	step_end
+
+Route2_Move_Player_WatchRivalExit1:
+	delay_16
+	delay_4
+	walk_in_place_faster_left
+	delay_16
+	walk_in_place_faster_down
+	step_end
+
+Route2_Move_Rival_Exit2:
+	jump_2_down
+	delay_16
+	walk_down
+	walk_down
+	step_end
 
 @ ==================================================== @
 @ ================== Trigger events ================== @
@@ -166,45 +189,6 @@ Route2_Evt_RivalEnd::
 @@@@@@@@@@@@@@@@@@@@@@@
 @@@ here be dragons @@@
 @@@@@@@@@@@@@@@@@@@@@@@
-
-Route103_Movement_RivalExitFacingNorth1:
-	walk_left
-	walk_down
-	step_end
-
-Route2_Evt_RivalExitFacingNorth2:
-	jump_2_down
-	delay_16
-	walk_down
-	walk_down
-	walk_down
-	walk_down
-	step_end
-
-Route103_Movement_WatchRivalExitFacingNorth:
-	delay_16
-	delay_4
-	walk_in_place_faster_left
-	delay_16
-	walk_in_place_faster_down
-	step_end
-
-Route103_Movement_RivalExit1:
-	walk_down
-	step_end
-
-Route103_Movement_RivalExit2:
-	jump_2_down
-	delay_16
-	walk_down
-	walk_down
-	walk_down
-	step_end
-
-Route103_Movement_WatchRivalExitFacingEastOrWest:
-	delay_16
-	walk_in_place_faster_down
-	step_end
 
 Route103_EventScript_Boy::
 	msgbox Route103_Text_ShouldHaveBroughtPotion, MSGBOX_NPC

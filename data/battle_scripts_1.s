@@ -3322,7 +3322,6 @@ BattleScript_ForceRandomSwitch::
 
 BattleScript_EffectMultiHit::
 	attackcanceler
-	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
 	attackstring
 	ppreduce
 	setmultihitcounter 0
@@ -3334,6 +3333,7 @@ BattleScript_MultiHitLoop::
 	jumpifhalfword CMP_EQUAL, gChosenMove, MOVE_SLEEP_TALK, BattleScript_DoMultiHit
 	jumpifstatus BS_ATTACKER, STATUS1_SLEEP, BattleScript_MultiHitPrintStrings
 BattleScript_DoMultiHit::
+	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE @ moving the accuracy check here causes the attack to check accuracy on every hit.
 	movevaluescleanup
 	copyhword sMOVE_EFFECT, sMULTIHIT_EFFECT
 	critcalc
