@@ -162,67 +162,67 @@
             ]
           },
           "dark_grass_mons": {
-            "encounter_rate": 20,
+            "encounter_rate": 55,
             "mons": [
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_ABRA"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_AEGISLASH"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_ABSOL"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_ABSOL"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_AEGISLASH"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_ACCELGOR"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_AERODACTYL"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_AERODACTYL"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_AERODACTYL"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_AIPOM"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_ALAKAZAM"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               },
               {
-                "min_level": 8,
-                "max_level": 8,
-                "species": "SPECIES_MAREEP"
+                "min_level": 1,
+                "max_level": 1,
+                "species": "SPECIES_RATTATA"
               }
             ]
           }

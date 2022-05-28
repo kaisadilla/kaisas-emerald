@@ -1,6 +1,27 @@
 Route102_MapScripts::
 	.byte 0
 
+@ ==================================================== @
+@ ================= NPC Interactions ================= @
+@ ==================================================== @
+Route3_Evt_BoyDenseGrass::
+	msgbox Route3_Tx_ThickGrass, MSGBOX_NPC
+	end
+
+Route3_Tx_ThickGrass:
+	.string "Some places grow a very dense\n"
+	.string "layer of grass.\p"
+	.string "This grass is usually inhabited\n"
+	.string "by stronger Pokémon, and sometimes\l"
+	.string "they even attack in pairs!\p"
+	.string "Be careful when you find these\n"
+	.string "thick patches. Unless you want to\l"
+	.string "fight, of course!$"
+
+@@@@@@@@@@@@@@@@@@@@@@@
+@@@ here be dragons @@@
+@@@@@@@@@@@@@@@@@@@@@@@
+
 Route102_EventScript_LittleBoy::
 	msgbox Route102_Text_ImNotVeryTall, MSGBOX_NPC
 	end
