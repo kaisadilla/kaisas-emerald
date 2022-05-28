@@ -33,6 +33,7 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_NO_SURFACING]                    = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
     [MB_STAIRS_OUTSIDE_ABANDONED_SHIP]   = TILE_FLAG_UNUSED,
     [MB_SHOAL_CAVE_ENTRANCE]             = TILE_FLAG_UNUSED,
+    [MB_DARK_GRASS]                      = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
     [MB_ICE]                             = TILE_FLAG_UNUSED,
     [MB_SAND]                            = TILE_FLAG_UNUSED,
     [MB_SEAWEED]                         = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
@@ -132,6 +133,10 @@ bool8 MetatileBehavior_IsATile(u8 metatileBehavior)
     return TRUE;
 }
 
+/**
+ * Returns true if the tile has the flag "TILE_FLAG_HAS_ENCOUNTERS".
+ * @param metatileBehavior The metatile to analyze.
+ */
 bool8 MetatileBehavior_IsEncounterTile(u8 metatileBehavior)
 {
     if ((sTileBitAttributes[metatileBehavior] & TILE_FLAG_HAS_ENCOUNTERS))
@@ -174,7 +179,7 @@ bool8 MetatileBehavior_IsJumpSouth(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsPokeGrass(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_TALL_GRASS || metatileBehavior == MB_LONG_GRASS)
+    if (metatileBehavior == MB_TALL_GRASS || metatileBehavior == MB_LONG_GRASS || metatileBehavior == MB_DARK_GRASS)
         return TRUE;
     else
         return FALSE;
@@ -816,14 +821,33 @@ bool8 MetatileBehavior_IsBridgeOverWaterNoEdge(u8 metatileBehavior)
         return FALSE;
 }
 
-bool8 MetatileBehavior_IsLandWildEncounter(u8 metatileBehavior)
-{
-    if (MetatileBehavior_IsSurfableWaterOrUnderwater(metatileBehavior) == FALSE
-     && MetatileBehavior_IsEncounterTile(metatileBehavior) == TRUE)
-        return TRUE;
-    else
+bool8 MetatileBehavior_IsDefaultLandWildEncounter (u8 metatileBehavior) {
+    if (sTileBitAttributes[metatileBehavior] & TILE_FLAG_HAS_ENCOUNTERS) {
+        return metatileBehavior == MB_TALL_GRASS
+            || metatileBehavior == MB_LONG_GRASS
+            || metatileBehavior == MB_UNUSED_05
+            || metatileBehavior == MB_DEEP_SAND
+            || metatileBehavior == MB_CAVE
+            || metatileBehavior == MB_INDOOR_ENCOUNTER
+            || metatileBehavior == MB_ASHGRASS
+            || metatileBehavior == MB_FOOTPRINTS;
+    }
+    else {
         return FALSE;
+    }
 }
+
+bool8 MetatileBehavior_IsDarkGrassWildEncounter (u8 metatileBehavior) {
+    return metatileBehavior == MB_DARK_GRASS;
+}
+
+//bool8 MetatileBehavior_IsLandWildEncounter(u8 metatileBehavior) {
+//    if (MetatileBehavior_IsSurfableWaterOrUnderwater(metatileBehavior) == FALSE
+//     && MetatileBehavior_IsEncounterTile(metatileBehavior) == TRUE)
+//        return TRUE;
+//    else
+//        return FALSE;
+//}
 
 bool8 MetatileBehavior_IsWaterWildEncounter(u8 metatileBehavior)
 {
@@ -1271,7 +1295,8 @@ bool8 MetatileBehavior_IsCuttableGrass(u8 metatileBehavior)
     if (metatileBehavior == MB_TALL_GRASS
      || metatileBehavior == MB_LONG_GRASS
      || metatileBehavior == MB_ASHGRASS
-     || metatileBehavior == MB_LONG_GRASS_SOUTH_EDGE)
+     || metatileBehavior == MB_LONG_GRASS_SOUTH_EDGE
+     || metatileBehavior == MB_DARK_GRASS)
         return TRUE;
     else
         return FALSE;

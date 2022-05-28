@@ -1686,8 +1686,35 @@ static void PopulateMapName(int matchCallId, u8 *destStr)
     GetMapName(destStr, GetRematchTrainerLocation(matchCallId), 0);
 }
 
-static u8 GetLandEncounterSlot(void)
-{
+static u8 GetLandEncounterSlot (void) {
+    int rand = Random() % 100;
+    if (rand < 20)
+        return 0;
+    else if (rand >= 20 && rand < 40)
+        return 1;
+    else if (rand >= 40 && rand < 50)
+        return 2;
+    else if (rand >= 50 && rand < 60)
+        return 3;
+    else if (rand >= 60 && rand < 70)
+        return 4;
+    else if (rand >= 70 && rand < 80)
+        return 5;
+    else if (rand >= 80 && rand < 85)
+        return 6;
+    else if (rand >= 85 && rand < 90)
+        return 7;
+    else if (rand >= 90 && rand < 94)
+        return 8;
+    else if (rand >= 94 && rand < 98)
+        return 9;
+    else if (rand >= 98 && rand < 99)
+        return 10;
+    else
+        return 11;
+}
+
+static u8 GetDarkGrassEncounterSlot (void) {
     int rand = Random() % 100;
     if (rand < 20)
         return 0;
@@ -1751,15 +1778,17 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
         if (gWildMonHeaders[i].mapGroup != MAP_GROUP(UNDEFINED))
         {
             numSpecies = 0;
-            if (gWildMonHeaders[i].landMonsInfo)
-            {
+            if (gWildMonHeaders[i].landMonsInfo) {
                 slot = GetLandEncounterSlot();
                 species[numSpecies] = gWildMonHeaders[i].landMonsInfo->wildPokemon[slot].species;
                 numSpecies++;
             }
-
-            if (gWildMonHeaders[i].waterMonsInfo)
-            {
+            if (gWildMonHeaders[i].darkGrassMonsInfo) {
+                slot = GetDarkGrassEncounterSlot();
+                species[numSpecies] = gWildMonHeaders[i].darkGrassMonsInfo->wildPokemon[slot].species;
+                numSpecies++;
+            }
+            if (gWildMonHeaders[i].waterMonsInfo) {
                 slot = GetWaterEncounterSlot();
                 species[numSpecies] = gWildMonHeaders[i].waterMonsInfo->wildPokemon[slot].species;
                 numSpecies++;

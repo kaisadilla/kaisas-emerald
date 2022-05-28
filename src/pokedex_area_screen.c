@@ -387,6 +387,8 @@ static bool8 MapHasSpecies(const struct WildPokemonHeader *info, u16 species)
 
     if (MonListHasSpecies(info->landMonsInfo, species, LAND_WILD_COUNT))
         return TRUE;
+    if (MonListHasSpecies(info->darkGrassMonsInfo, species, DARK_GRASS_WILD_COUNT))
+        return TRUE;
     if (MonListHasSpecies(info->waterMonsInfo, species, WATER_WILD_COUNT))
         return TRUE;
 // When searching the fishing encounters, this incorrectly uses the size of the land encounters.

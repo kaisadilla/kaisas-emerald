@@ -42,6 +42,7 @@ enum {
     WILD_AREA_WATER,
     WILD_AREA_ROCKS,
     WILD_AREA_FISHING,
+    WILD_AREA_DARK_GRASS,
 };
 
 #define WILD_CHECK_REPEL    (1 << 0)
@@ -204,6 +205,36 @@ static u8 ChooseWildMonIndex_Land(void)
     else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_8 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_9)
         return 9;
     else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_9 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_10)
+        return 10;
+    else
+        return 11;
+}
+
+// LAND_WILD_COUNT
+static u8 ChooseWildMonIndex_DarkGrass(void) {
+    u8 rand = Random() % ENCOUNTER_CHANCE_DARK_GRASS_MONS_TOTAL;
+
+    if (rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_0)
+        return 0;
+    else if (rand >= ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_0 && rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_1)
+        return 1;
+    else if (rand >= ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_1 && rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_2)
+        return 2;
+    else if (rand >= ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_2 && rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_3)
+        return 3;
+    else if (rand >= ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_3 && rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_4)
+        return 4;
+    else if (rand >= ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_4 && rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_5)
+        return 5;
+    else if (rand >= ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_5 && rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_6)
+        return 6;
+    else if (rand >= ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_6 && rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_7)
+        return 7;
+    else if (rand >= ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_7 && rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_8)
+        return 8;
+    else if (rand >= ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_8 && rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_9)
+        return 9;
+    else if (rand >= ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_9 && rand < ENCOUNTER_CHANCE_DARK_GRASS_MONS_SLOT_10)
         return 10;
     else
         return 11;
@@ -437,6 +468,9 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, u8 ar
 
         wildMonIndex = ChooseWildMonIndex_Land();
         break;
+    case WILD_AREA_DARK_GRASS:
+        wildMonIndex = ChooseWildMonIndex_DarkGrass();
+        break;
     case WILD_AREA_WATER:
         if (TryGetAbilityInfluencedWildMonIndex(wildMonInfo->wildPokemon, TYPE_STEEL, ABILITY_MAGNET_PULL, &wildMonIndex))
             break;
@@ -610,8 +644,7 @@ bool8 StandardWildEncounter(u16 currMetaTileBehavior, u16 previousMetaTileBehavi
     }
     else
     {
-        if (MetatileBehavior_IsLandWildEncounter(currMetaTileBehavior) == TRUE)
-        {
+        if (MetatileBehavior_IsDefaultLandWildEncounter(currMetaTileBehavior) == TRUE) {
             if (gWildMonHeaders[headerId].landMonsInfo == NULL)
                 return FALSE;
             else if (previousMetaTileBehavior != currMetaTileBehavior && !DoGlobalWildEncounterDiceRoll())
@@ -648,6 +681,41 @@ bool8 StandardWildEncounter(u16 currMetaTileBehavior, u16 previousMetaTileBehavi
                     }
                     else
                     {
+                        BattleSetup_StartWildBattle();
+                    }
+                    return TRUE;
+                }
+
+                return FALSE;
+            }
+        }
+        else if (MetatileBehavior_IsDarkGrassWildEncounter(currMetaTileBehavior) == TRUE) {
+            if (gWildMonHeaders[headerId].darkGrassMonsInfo == NULL)
+                return FALSE;
+            else if (previousMetaTileBehavior != currMetaTileBehavior && !DoGlobalWildEncounterDiceRoll())
+                return FALSE;
+            else if (DoWildEncounterRateTest(gWildMonHeaders[headerId].darkGrassMonsInfo->encounterRate, FALSE) != TRUE)
+                return FALSE;
+
+            if (TryStartRoamerEncounter() == TRUE) {
+                roamer = &gSaveBlock1Ptr->roamer;
+                if (!IsWildLevelAllowedByRepel(roamer->level))
+                    return FALSE;
+
+                BattleSetup_StartRoamerBattle();
+                return TRUE;
+            }
+            else {
+                // try a regular wild land encounter
+                if (TryGenerateWildMon(gWildMonHeaders[headerId].darkGrassMonsInfo, WILD_AREA_DARK_GRASS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
+                {
+                    if (TryDoDoubleWildBattle()) {
+                        struct Pokemon mon1 = gEnemyParty[0];
+                        TryGenerateWildMon(gWildMonHeaders[headerId].darkGrassMonsInfo, WILD_AREA_DARK_GRASS, WILD_CHECK_KEEN_EYE);
+                        gEnemyParty[1] = mon1;
+                        BattleSetup_StartDoubleWildBattle();
+                    }
+                    else {
                         BattleSetup_StartWildBattle();
                     }
                     return TRUE;
@@ -765,7 +833,7 @@ bool8 SweetScentWildEncounter(void)
     }
     else
     {
-        if (MetatileBehavior_IsLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
+        if (MetatileBehavior_IsDefaultLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
         {
             if (gWildMonHeaders[headerId].landMonsInfo == NULL)
                 return FALSE;
@@ -837,10 +905,10 @@ void FishingWildEncounter(u8 rod)
     BattleSetup_StartWildBattle();
 }
 
-u16 GetLocalWildMon(bool8 *isWaterMon)
-{
+u16 GetLocalWildMon(bool8 *isWaterMon) {
     u16 headerId;
     const struct WildPokemonInfo *landMonsInfo;
+    const struct WildPokemonInfo *darkGrassMonsInfo;
     const struct WildPokemonInfo *waterMonsInfo;
 
     *isWaterMon = FALSE;
@@ -848,15 +916,18 @@ u16 GetLocalWildMon(bool8 *isWaterMon)
     if (headerId == HEADER_NONE)
         return SPECIES_NONE;
     landMonsInfo = gWildMonHeaders[headerId].landMonsInfo;
+    darkGrassMonsInfo = gWildMonHeaders[headerId].darkGrassMonsInfo;
     waterMonsInfo = gWildMonHeaders[headerId].waterMonsInfo;
     // Neither
-    if (landMonsInfo == NULL && waterMonsInfo == NULL)
+    if (landMonsInfo == NULL && darkGrassMonsInfo == NULL && waterMonsInfo == NULL)
         return SPECIES_NONE;
     // Land Pokemon
-    else if (landMonsInfo != NULL && waterMonsInfo == NULL)
+    else if (landMonsInfo != NULL && darkGrassMonsInfo == NULL && waterMonsInfo == NULL)
         return landMonsInfo->wildPokemon[ChooseWildMonIndex_Land()].species;
+    else if (landMonsInfo == NULL && darkGrassMonsInfo != NULL && waterMonsInfo != NULL)
+        return darkGrassMonsInfo->wildPokemon[ChooseWildMonIndex_DarkGrass()].species;
     // Water Pokemon
-    else if (landMonsInfo == NULL && waterMonsInfo != NULL)
+    else if (landMonsInfo == NULL && darkGrassMonsInfo == NULL && waterMonsInfo != NULL)
     {
         *isWaterMon = TRUE;
         return waterMonsInfo->wildPokemon[ChooseWildMonIndex_WaterRock()].species;
