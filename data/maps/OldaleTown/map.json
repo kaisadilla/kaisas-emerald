@@ -79,7 +79,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "OldaleTown_EventScript_Rival",
+      "script": "Oldale_Evt_RivalTellsYouToGoToLab",
       "flag": "FLAG_HIDE_OLDALE_TOWN_RIVAL"
     },
     {
@@ -143,7 +143,7 @@
       "elevation": 3,
       "var": "VAR_OLDALE_RIVAL_STATE",
       "var_value": "1",
-      "script": "OldaleTown_EventScript_RivalTrigger1"
+      "script": "Oldale_Evt_RivalTellsYouToGoToLabTrigger1"
     },
     {
       "type": "trigger",
@@ -152,7 +152,7 @@
       "elevation": 3,
       "var": "VAR_OLDALE_RIVAL_STATE",
       "var_value": "1",
-      "script": "OldaleTown_EventScript_RivalTrigger2"
+      "script": "Oldale_Evt_RivalTellsYouToGoToLabTrigger2"
     },
     {
       "type": "trigger",
@@ -161,7 +161,7 @@
       "elevation": 3,
       "var": "VAR_OLDALE_RIVAL_STATE",
       "var_value": "1",
-      "script": "OldaleTown_EventScript_RivalTrigger3"
+      "script": "Oldale_Evt_RivalTellsYouToGoToLabTrigger3"
     },
     {
       "type": "trigger",

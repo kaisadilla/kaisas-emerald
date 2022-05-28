@@ -98,11 +98,13 @@ Route2_Evt_StartBrendanBattleMudkip::
 	end
 
 Route2_Evt_AfterMayBattle::
+	setflag FLAG_FIRST_RIVAL_BATTLE_FOUGHT
 	msgbox Route103_Text_MayTimeToHeadBack, MSGBOX_DEFAULT
 	goto Route2_Evt_RivalExit
 	end
 
 Route2_Evt_AfterBrendanBattle::
+	setflag FLAG_FIRST_RIVAL_BATTLE_FOUGHT
 	msgbox Route103_Text_BrendanTimeToHeadBack, MSGBOX_DEFAULT
 	goto Route2_Evt_RivalExit
 	end

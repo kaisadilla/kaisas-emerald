@@ -28,6 +28,7 @@ Oldale_Evt_TwinBlockPath::
 Oldale_Evt_Twin::
 	lock
 	faceplayer
+	goto_if_set FLAG_FIRST_RIVAL_BATTLE_FOUGHT, Oldale_Evt_Twin_FollowRival
 	goto_if_set FLAG_ADVENTURE_STARTED, Oldale_Evt_Twin_NotBlockingPath
 
 	checkplayergender
@@ -61,6 +62,15 @@ Oldale_Tx_ImLookingForSomeoneFemale:
 	.string "But I don't know how I'll\n"
 	.string "recognize that girl if I see her!$"
 
+Oldale_Evt_Twin_FollowRival::
+	msgbox Oldale_Tx_YouShouldFollowRival, MSGBOX_DEFAULT
+	release
+	end
+
+Oldale_Tx_YouShouldFollowRival:
+	.string "You should go with your friend.\p"
+	.string "Making people wait is rude.$"
+
 Oldale_Evt_Twin_NotBlockingPath::
 	msgbox OldaleTown_Text_FinishedSketchingFootprints, MSGBOX_DEFAULT
 	release
@@ -70,6 +80,7 @@ Oldale_Evt_Twin_NotBlockingPath::
 @ ================== Trigger events ================== @
 @ ==================================================== @
 Oldale_Evt_RivalIsLookingForYou1::
+	goto_if_set FLAG_FIRST_RIVAL_BATTLE_FOUGHT, Oldale_Evt_Twin_BlockPathFollowRival
 	call Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove
 	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin1
 	waitmovement 0
@@ -78,6 +89,7 @@ Oldale_Evt_RivalIsLookingForYou1::
 	end
 
 Oldale_Evt_RivalIsLookingForYou2::
+	goto_if_set FLAG_FIRST_RIVAL_BATTLE_FOUGHT, Oldale_Evt_Twin_BlockPathFollowRival
 	call Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove
 	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin2
 	waitmovement 0
@@ -86,6 +98,7 @@ Oldale_Evt_RivalIsLookingForYou2::
 	end
 
 Oldale_Evt_RivalIsLookingForYou3::
+	goto_if_set FLAG_FIRST_RIVAL_BATTLE_FOUGHT, Oldale_Evt_Twin_BlockPathFollowRival
 	call Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove
 	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin3
 	waitmovement 0
@@ -94,6 +107,7 @@ Oldale_Evt_RivalIsLookingForYou3::
 	end
 
 Oldale_Evt_RivalIsLookingForYou4::
+	goto_if_set FLAG_FIRST_RIVAL_BATTLE_FOUGHT, Oldale_Evt_Twin_BlockPathFollowRival
 	call Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove
 	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin4
 	waitmovement 0
@@ -102,6 +116,7 @@ Oldale_Evt_RivalIsLookingForYou4::
 	end
 
 Oldale_Evt_RivalIsLookingForYou5::
+	goto_if_set FLAG_FIRST_RIVAL_BATTLE_FOUGHT, Oldale_Evt_Twin_BlockPathFollowRival
 	call Oldale_Evt_RivalIsLookingForYou_BeforePlayerMove
 	applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_Player_GetBehindTwin5
 	waitmovement 0
@@ -142,17 +157,113 @@ Oldale_Evt_RivalIsLookingForYou_AfterPlayerMove::
 	return
 
 Oldale_Evt_RivalIsLookingForYou_TexMale::
-	msgbox Oldate_Tx_SomeoneWasLookingForYouMale
+	msgbox Oldale_Tx_SomeoneWasLookingForYouMale
 	return
 Oldale_Evt_RivalIsLookingForYou_TexFemale::
-	msgbox Oldate_Tx_SomeoneWasLookingForYouFemale
+	msgbox Oldale_Tx_SomeoneWasLookingForYouFemale
 	return
 
 Oldale_Evt_RivalIsThatWay_TexMale::
-	msgbox Oldate_Tx_TheyAreThatWayMale
+	msgbox Oldale_Tx_TheyAreThatWayMale
 	return
 Oldale_Evt_RivalIsThatWay_TexFemale::
-	msgbox Oldate_Tx_TheyAreThatWayFemale
+	msgbox Oldale_Tx_TheyAreThatWayFemale
+	return
+
+	
+
+Oldale_Evt_RivalTellsYouToGoToLab::
+	lockall
+	applymovement LOCALID_RIVAL, Common_Movement_FacePlayer
+	waitmovement 0
+	setvar VAR_0x8009, 0
+	goto Oldale_Evt_RivalGoLabMessage
+	end
+
+Oldale_Evt_RivalTellsYouToGoToLabTrigger1::
+	lockall
+	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalApproachPlayer1
+	waitmovement 0
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight
+	waitmovement 0
+	setvar VAR_0x8009, 1
+	goto Oldale_Evt_RivalGoLabMessage
+	end
+
+Oldale_Evt_RivalTellsYouToGoToLabTrigger2::
+	lockall
+	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalApproachPlayer2
+	waitmovement 0
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight
+	waitmovement 0
+	setvar VAR_0x8009, 1
+	goto Oldale_Evt_RivalGoLabMessage
+	end
+
+Oldale_Evt_RivalTellsYouToGoToLabTrigger3::
+	lockall
+	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalApproachPlayer3
+	waitmovement 0
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight
+	waitmovement 0
+	setvar VAR_0x8009, 1
+	goto Oldale_Evt_RivalGoLabMessage
+	end
+
+Oldale_Evt_RivalGoLabMessage::
+	checkplayergender
+	goto_if_eq VAR_RESULT, MALE, Oldale_Evt_RivalGoLabMessageMale
+	goto_if_eq VAR_RESULT, FEMALE, Oldale_Evt_RivalGoLabMessageFemale
+	end
+
+Oldale_Evt_RivalGoLabMessageMale::
+	msgbox Oldale_Tx_LetsGoBackToLabMale, MSGBOX_DEFAULT
+	goto Oldale_Evt_RivalTellsYouToGoToLabFinish
+	end
+
+Oldale_Tx_LetsGoBackToLabMale:
+	.string "MAY: {PLAYER}{KUN}!\n"
+	.string "Over here!\p"
+	.string "After such a battle, you should pay\n"
+	.string "a visit to the Pokémon center.\p"
+	.string "Then hurry to my father's lab,\n"
+	.string "I'll be waiting you!$"
+
+Oldale_Evt_RivalGoLabMessageFemale::
+	msgbox Oldale_Tx_LetsGoBackToLabFemale, MSGBOX_DEFAULT
+	goto Oldale_Evt_RivalTellsYouToGoToLabFinish
+	end
+
+Oldale_Tx_LetsGoBackToLabFemale:
+	.string "BRENDAN: Just healed my Pokémon in\n"
+	.string "the Pokémon Center.\p"
+	.string "I'll be heading back to my dad's\n"
+	.string "LAB now.\p"
+	.string "You should come too, {PLAYER}!\n"
+	.string "I'll be waiting for you.$"
+
+Oldale_Evt_RivalTellsYouToGoToLabFinish::
+	closemessage
+	call_if_eq VAR_0x8009, 0, OldaleTown_EventScript_DoExitMovement1
+	call_if_eq VAR_0x8009, 1, OldaleTown_EventScript_DoExitMovement2
+	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalExit
+	waitmovement 0
+	removeobject LOCALID_RIVAL
+	setvar VAR_OLDALE_RIVAL_STATE, 2
+	setflag FLAG_HIDE_OLDALE_TOWN_RIVAL
+	releaseall
+	end
+
+OldaleTown_EventScript_DoExitMovement1::
+	goto_if_ne VAR_FACING, DIR_SOUTH, OldaleTown_EventScript_DoExitMovement2
+	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalExit
+	waitmovement 0
+	return
+
+OldaleTown_EventScript_DoExitMovement2::
+	applymovement OBJ_EVENT_ID_PLAYER, OldaleTown_Movement_WatchRivalExit
+	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalExit
+	waitmovement 0
 	return
 
 Oldale_Move_Twin_NoticePlayer:
@@ -243,24 +354,37 @@ Oldale_Move_Twin_ReturnToBlockingSpot:
 	walk_left
 	step_end
 
-Oldate_Tx_SomeoneWasLookingForYouMale:
+Oldale_Tx_SomeoneWasLookingForYouMale:
 	.string "Hey, you!\p"
 	.string "A girl told me to look out for\n"
 	.string "some boy. I think it may be you!\p"
 	.string "She went that way I think,\n"
 	.string "Let me show you.$"
-Oldate_Tx_SomeoneWasLookingForYouFemale:
+Oldale_Tx_SomeoneWasLookingForYouFemale:
 	.string "Hey, you!\p"
 	.string "A boy told me to look out for\n"
 	.string "some girl. I think it may be you!\p"
 	.string "She went that way I think,\n"
 	.string "Let me show you.$"
-Oldate_Tx_TheyAreThatWayMale:
+Oldale_Tx_TheyAreThatWayMale:
 	.string "Yes, she went in that direction.\n"
 	.string "She looked happy that you'd come.$"
-Oldate_Tx_TheyAreThatWayFemale:
+Oldale_Tx_TheyAreThatWayFemale:
 	.string "Yes, he went in that direction.\n"
 	.string "He looked happy that you'd come.$"
+
+Oldale_Evt_Twin_BlockPathFollowRival::
+	lockall
+	playse SE_PIN
+	applymovement LOCALID_TWIN, Common_Movement_ExclamationMark
+	waitmovement 0
+	applymovement LOCALID_TWIN, Oldale_Move_Twin_NoticePlayer
+	waitmovement 0
+
+	msgbox Oldale_Tx_YouShouldFollowRival, MSGBOX_DEFAULT
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkRight
+	return
 
 OldaleTown_EventScript_BlockedPath::
 	lockall
@@ -450,84 +574,6 @@ OldaleTown_Movement_Unknown2:
 	walk_up
 	step_end
 
-OldaleTown_EventScript_Rival::
-	lockall
-	applymovement LOCALID_RIVAL, Common_Movement_FacePlayer
-	waitmovement 0
-	setvar VAR_0x8009, 0
-	goto OldaleTown_EventScript_ShowRivalMessage
-	end
-
-OldaleTown_EventScript_RivalTrigger1::
-	lockall
-	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalApproachPlayer1
-	waitmovement 0
-	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight
-	waitmovement 0
-	setvar VAR_0x8009, 1
-	goto OldaleTown_EventScript_ShowRivalMessage
-	end
-
-OldaleTown_EventScript_RivalTrigger2::
-	lockall
-	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalApproachPlayer2
-	waitmovement 0
-	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight
-	waitmovement 0
-	setvar VAR_0x8009, 1
-	goto OldaleTown_EventScript_ShowRivalMessage
-	end
-
-OldaleTown_EventScript_RivalTrigger3::
-	lockall
-	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalApproachPlayer3
-	waitmovement 0
-	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight
-	waitmovement 0
-	setvar VAR_0x8009, 1
-	goto OldaleTown_EventScript_ShowRivalMessage
-	end
-
-OldaleTown_EventScript_ShowRivalMessage::
-	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, OldaleTown_EventScript_ShowMayMessage
-	goto_if_eq VAR_RESULT, FEMALE, OldaleTown_EventScript_ShowBrendanMessage
-	end
-
-OldaleTown_EventScript_ShowMayMessage::
-	msgbox OldaleTown_Text_MayLetsGoBack, MSGBOX_DEFAULT
-	goto OldaleTown_EventScript_RivalFinish
-	end
-
-OldaleTown_EventScript_ShowBrendanMessage::
-	msgbox OldaleTown_Text_BrendanLetsGoBack, MSGBOX_DEFAULT
-	goto OldaleTown_EventScript_RivalFinish
-	end
-
-OldaleTown_EventScript_RivalFinish::
-	closemessage
-	call_if_eq VAR_0x8009, 0, OldaleTown_EventScript_DoExitMovement1
-	call_if_eq VAR_0x8009, 1, OldaleTown_EventScript_DoExitMovement2
-	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalExit
-	waitmovement 0
-	removeobject LOCALID_RIVAL
-	setvar VAR_OLDALE_RIVAL_STATE, 2
-	setflag FLAG_HIDE_OLDALE_TOWN_RIVAL
-	releaseall
-	end
-
-OldaleTown_EventScript_DoExitMovement1::
-	goto_if_ne VAR_FACING, DIR_SOUTH, OldaleTown_EventScript_DoExitMovement2
-	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalExit
-	waitmovement 0
-	return
-
-OldaleTown_EventScript_DoExitMovement2::
-	applymovement OBJ_EVENT_ID_PLAYER, OldaleTown_Movement_WatchRivalExit
-	applymovement LOCALID_RIVAL, OldaleTown_Movement_RivalExit
-	waitmovement 0
-	return
-
 OldaleTown_Movement_RivalApproachPlayer1:
 	walk_left
 	walk_left
@@ -609,16 +655,6 @@ OldaleTown_Text_FinishedSketchingFootprints:
 	.string "a rare POKéMON.\p"
 	.string "But it turns out they were only my\n"
 	.string "own footprints…$"
-
-OldaleTown_Text_MayLetsGoBack:
-	.string "MAY: {PLAYER}{KUN}!\n"
-	.string "Over here!\l"
-	.string "Let's hurry home!$"
-
-OldaleTown_Text_BrendanLetsGoBack:
-	.string "BRENDAN: I'm heading back to my dad's\n"
-	.string "LAB now.\l"
-	.string "{PLAYER}, you should hustle back, too.$"
 
 OldaleTown_Text_CitySign:
 	.string "OLDALE TOWN\n"
