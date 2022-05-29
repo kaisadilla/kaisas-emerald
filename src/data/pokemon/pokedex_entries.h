@@ -10787,4 +10787,174 @@ const struct PokedexEntry gPokedexEntries[] =
         .trainerScale = 256,
         .trainerOffset = 0,
     },
+
+    //ADDED
+    [NATIONAL_DEX_PIDGEOT_MEGA] =
+    {
+        .categoryName = _("Bird"),
+        .height = 14,
+        .weight = 400,
+        .description = gPidgeotMegaPokedexText,
+        .pokemonScale = 262,
+        .pokemonOffset = 0,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+    [NATIONAL_DEX_HOUNDOOM_MEGA] =
+    {
+        .categoryName = _("Dark"),
+        .height = 14,
+        .weight = 350,
+        .description = gHoundoomMegaPokedexText,
+        .pokemonScale = 256,
+        .pokemonOffset = 4,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+    [NATIONAL_DEX_BANETTE_MEGA] =
+    {
+        .categoryName = _("Marionette"),
+        .height = 11,
+        .weight = 125,
+        .description = gBanetteMegaPokedexText,
+        .pokemonScale = 262,
+        .pokemonOffset = 9,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+    [NATIONAL_DEX_LOPUNNY_MEGA] =
+    {
+        .categoryName = _("Rabbit"),
+        .height = 12,
+        .weight = 333,
+        .description = gLopunnyMegaPokedexText,
+        .pokemonScale = 356,
+        .pokemonOffset = 17,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+    [NATIONAL_DEX_MAROWAK_ALOLAN] =
+    {
+        .categoryName = _("Bone Keeper"),
+        .height = 10,
+        .weight = 450,
+        .description = gMarowakAlolanPokedexText,
+        .pokemonScale = 293,
+        .pokemonOffset = 12,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+    [NATIONAL_DEX_SABLEYE_MEGA] =
+    {
+        .categoryName = _("Darkness"),
+        .height = 5,
+        .weight = 110,
+        .description = gSableyeMegaPokedexText,
+        .pokemonScale = 451,
+        .pokemonOffset = 17,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+    [NATIONAL_DEX_MAWILE_MEGA] =
+    {
+        .categoryName = _("Deceiver"),
+        .height = 6,
+        .weight = 115,
+        .description = gMawileMegaPokedexText,
+        .pokemonScale = 466,
+        .pokemonOffset = 17,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+    [NATIONAL_DEX_CAMERUPT_MEGA] =
+    {
+        .categoryName = _("Eruption"),
+        .height = 19,
+        .weight = 2200,
+        .description = gCameruptMegaPokedexText,
+        .pokemonScale = 256,
+        .pokemonOffset = 7,
+        .trainerScale = 345,
+        .trainerOffset = 6,
+    },
+    [NATIONAL_DEX_ALTARIA_MEGA] =
+    {
+        .categoryName = _("Humming"),
+        .height = 11,
+        .weight = 206,
+        .description = gAltariaMegaPokedexText,
+        .pokemonScale = 327,
+        .pokemonOffset = 0,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+    [NATIONAL_DEX_ABOMASNOW_MEGA] =
+    {
+        .categoryName = _("Frost Tree"),
+        .height = 22,
+        .weight = 1355,
+        .description = gAbomasnowMegaPokedexText,
+        .pokemonScale = 356,
+        .pokemonOffset = 17,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+    [NATIONAL_DEX_MEDICHAM_MEGA] =
+    {
+        .categoryName = _("Meditate"),
+        .height = 13,
+        .weight = 315,
+        .description = gMedichamMegaPokedexText,
+        .pokemonScale = 298,
+        .pokemonOffset = 5,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+    [NATIONAL_DEX_GALLADE_MEGA] =
+    {
+        .categoryName = _("Blade"),
+        .height = 16,
+        .weight = 520,
+        .description = gGalladeMegaPokedexText,
+        .pokemonScale = 356,
+        .pokemonOffset = 17,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+
+    [NATIONAL_DEX_MANECTRIC_MEGA] =
+    {
+        .categoryName = _("Discharge"),
+        .height = 15,
+        .weight = 402,
+        .description = gManectricMegaPokedexText,
+        .pokemonScale = 256,
+        .pokemonOffset = 3,
+        .trainerScale = 257,
+        .trainerOffset = 0,
+    },
+
+    [NATIONAL_DEX_ABSOL_MEGA] =
+    {
+        .categoryName = _("Disaster"),
+        .height = 12,
+        .weight = 470,
+        .description = gAbsolMegaPokedexText,
+        .pokemonScale = 301,
+        .pokemonOffset = 3,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
+
+    [NATIONAL_DEX_HOOPA_UNBOUND] =
+    {
+        .categoryName = _("Mischief"),
+        .height = 5,
+        .weight = 90,
+        .description = gHoopaUnboundPokedexText,
+        .pokemonScale = 356,
+        .pokemonOffset = 17,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+    },
 };

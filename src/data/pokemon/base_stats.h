@@ -25405,6 +25405,7 @@ const struct BaseStats gBaseStats[] =
         .noFlip = FALSE,
     },
 
+    // Mega
     [SPECIES_VENUSAUR_MEGA] =
     {
         .baseHP        = 80,

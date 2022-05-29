@@ -672,7 +672,7 @@ bool8 StandardWildEncounter(u16 currMetaTileBehavior, u16 previousMetaTileBehavi
                 // try a regular wild land encounter
                 if (TryGenerateWildMon(gWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
-                    if (TryDoDoubleWildBattle())
+                    if (ShouldWildBattleBeDouble(WILD_AREA_LAND))
                     {
                         struct Pokemon mon1 = gEnemyParty[0];
                         TryGenerateWildMon(gWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE);
@@ -709,7 +709,7 @@ bool8 StandardWildEncounter(u16 currMetaTileBehavior, u16 previousMetaTileBehavi
                 // try a regular wild land encounter
                 if (TryGenerateWildMon(gWildMonHeaders[headerId].darkGrassMonsInfo, WILD_AREA_DARK_GRASS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
-                    if (TryDoDoubleWildBattle()) {
+                    if (ShouldWildBattleBeDouble(WILD_AREA_DARK_GRASS)) {
                         struct Pokemon mon1 = gEnemyParty[0];
                         TryGenerateWildMon(gWildMonHeaders[headerId].darkGrassMonsInfo, WILD_AREA_DARK_GRASS, WILD_CHECK_KEEN_EYE);
                         gEnemyParty[1] = mon1;
@@ -750,7 +750,7 @@ bool8 StandardWildEncounter(u16 currMetaTileBehavior, u16 previousMetaTileBehavi
                 if (TryGenerateWildMon(gWildMonHeaders[headerId].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
                     gIsSurfingEncounter = TRUE;
-                    if (TryDoDoubleWildBattle())
+                    if (ShouldWildBattleBeDouble(WILD_AREA_WATER))
                     {
                         struct Pokemon mon1 = gEnemyParty[0];
                         TryGenerateWildMon(gWildMonHeaders[headerId].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_KEEN_EYE);
@@ -1070,15 +1070,38 @@ static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
         *encRate = *encRate * 2 / 3;
 }
 
-bool8 TryDoDoubleWildBattle(void)
-{
-    if (GetSafariZoneFlag() || GetMonsStateToDoubles() != PLAYER_HAS_TWO_USABLE_MONS)
+bool8 ShouldWildBattleBeDouble (u8 area) {
+    if (GetMonsStateToDoubles() != PLAYER_HAS_TWO_USABLE_MONS) {
         return FALSE;
-    else if (B_FLAG_FORCE_DOUBLE_WILD != 0 && FlagGet(B_FLAG_FORCE_DOUBLE_WILD))
-        return TRUE;
-    #if B_DOUBLE_WILD_CHANCE != 0
-    else if ((Random() % 100) + 1 < B_DOUBLE_WILD_CHANCE)
-        return TRUE;
+    }
+    if (GetSafariZoneFlag()) {
+        return FALSE;
+    }
+    #if CONF_DOUBLE_WILD_CHANCE_LAND != 0
+    if (area == WILD_AREA_LAND) {
+        return (Random() % 100) + 1 < CONF_DOUBLE_WILD_CHANCE_LAND;
+    }
     #endif
+    #if CONF_DOUBLE_WILD_CHANCE_WATER != 0
+    if (area == WILD_AREA_WATER) {
+        return (Random() % 100) + 1 < CONF_DOUBLE_WILD_CHANCE_WATER;
+    }
+    #endif
+    #if CONF_DOUBLE_WILD_CHANCE_ROCKS != 0
+    if (area == WILD_AREA_WATER) {
+        return (Random() % 100) + 1 < CONF_DOUBLE_WILD_CHANCE_ROCKS;
+    }
+    #endif
+    #if CONF_DOUBLE_WILD_CHANCE_FISHING != 0
+    if (area == WILD_AREA_FISHING) {
+        return (Random() % 100) + 1 < CONF_DOUBLE_WILD_CHANCE_FISHING;
+    }
+    #endif
+    #if CONF_DOUBLE_WILD_CHANCE_DARK_GRASS != 0
+    if (area == WILD_AREA_DARK_GRASS) {
+        return (Random() % 100) + 1 < CONF_DOUBLE_WILD_CHANCE_DARK_GRASS;
+    }
+    #endif
+
     return FALSE;
 }

@@ -5348,3 +5348,49 @@ const u8 gCalyrexPokedexText[] = _(
     "providing healing and blessings. It\n"
     "reigned over the Galar region in times\n"
     "of yore.");
+
+// Kaisa // TODO
+const u8 gPidgeotMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gHoundoomMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gBanetteMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gLopunnyMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gMarowakAlolanPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gSableyeMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gMawileMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gCameruptMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gAltariaMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gAbomasnowMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gMedichamMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gGalladeMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gManectricMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gAbsolMegaPokedexText[] = _(
+    "TODO: Add Pokédex description.");
+
+const u8 gHoopaUnboundPokedexText[] = _(
+    "TODO: Add Pokédex description.");

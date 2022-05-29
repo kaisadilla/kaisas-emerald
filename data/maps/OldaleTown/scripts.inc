@@ -28,8 +28,8 @@ Oldale_Evt_TwinBlockPath::
 Oldale_Evt_Twin::
 	lock
 	faceplayer
-	goto_if_set FLAG_FIRST_RIVAL_BATTLE_FOUGHT, Oldale_Evt_Twin_FollowRival
 	goto_if_set FLAG_ADVENTURE_STARTED, Oldale_Evt_Twin_NotBlockingPath
+	goto_if_set FLAG_FIRST_RIVAL_BATTLE_FOUGHT, Oldale_Evt_Twin_FollowRival
 
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, Oldale_Evt_ImLookingForSomeone_Male
@@ -72,9 +72,13 @@ Oldale_Tx_YouShouldFollowRival:
 	.string "Making people wait is rude.$"
 
 Oldale_Evt_Twin_NotBlockingPath::
-	msgbox OldaleTown_Text_FinishedSketchingFootprints, MSGBOX_DEFAULT
+	msgbox Oldale_Tx_GoodLuckCatchingPokemon, MSGBOX_DEFAULT
 	release
 	end
+
+Oldale_Tx_GoodLuckCatchingPokemon:
+	.string "Are you going to catch POKéMON?\n"
+	.string "Good luck!$"
 
 @ ==================================================== @
 @ ================== Trigger events ================== @
@@ -649,12 +653,6 @@ OldaleTown_Text_WaitDontComeInHere:
 	.string "a rare POKéMON!\p"
 	.string "Wait until I finish sketching\n"
 	.string "them, okay?$"
-
-OldaleTown_Text_FinishedSketchingFootprints:
-	.string "I finished sketching the footprints of\n"
-	.string "a rare POKéMON.\p"
-	.string "But it turns out they were only my\n"
-	.string "own footprints…$"
 
 OldaleTown_Text_CitySign:
 	.string "OLDALE TOWN\n"

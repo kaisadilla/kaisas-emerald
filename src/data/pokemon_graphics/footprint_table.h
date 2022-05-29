@@ -899,5 +899,22 @@ const u8 *const gMonFootprintTable[] =
     [SPECIES_GLASTRIER] = gMonFootprint_Glastrier,
     [SPECIES_SPECTRIER] = gMonFootprint_Spectrier,
     [SPECIES_CALYREX] = gMonFootprint_Calyrex,
+
+    // Kaisa
+    [SPECIES_PIDGEOT_MEGA] = gMonFootprint_Pidgeot,
+    [SPECIES_HOUNDOOM_MEGA] = gMonFootprint_Houndoom,
+    [SPECIES_BANETTE_MEGA] = gMonFootprint_Banette,
+    [SPECIES_LOPUNNY_MEGA] = gMonFootprint_Lopunny,
+    [SPECIES_MAROWAK_ALOLAN] = gMonFootprint_Marowak,
+    [SPECIES_SABLEYE_MEGA] = gMonFootprint_Sableye,
+    [SPECIES_MAWILE_MEGA] = gMonFootprint_Mawile,
+    [SPECIES_CAMERUPT_MEGA] = gMonFootprint_Camerupt,
+    [SPECIES_ALTARIA_MEGA] = gMonFootprint_Altaria,
+    [SPECIES_ABOMASNOW_MEGA] = gMonFootprint_Abomasnow,
+    [SPECIES_MEDICHAM_MEGA] = gMonFootprint_Medicham,
+    [SPECIES_GALLADE_MEGA] = gMonFootprint_Gallade,
+    [SPECIES_MANECTRIC_MEGA] = gMonFootprint_Manectric,
+    [SPECIES_ABSOL_MEGA] = gMonFootprint_Manectric,
+    [SPECIES_HOOPA_UNBOUND] = gMonFootprint_Hoopa,
     [SPECIES_EGG] = gMonFootprint_Bulbasaur,
 };

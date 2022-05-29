@@ -82,12 +82,26 @@ Littleroot_Evt_SetFootprintsManBlockingPos::
 Littleroot_EvtNPC_FootprintsMan::
 	lock
 	faceplayer
-	goto_if_set FLAG_ADVENTURE_STARTED, LittlerootTown_EventScript_GoodLuck
-	goto_if_set FLAG_RESCUED_BIRCH, LittlerootTown_EventScript_YouSavedBirch
+	goto_if_set FLAG_ADVENTURE_STARTED, LittlerootTown_Evt_YouSavedBirch
+	goto_if_set FLAG_RESCUED_BIRCH, LittlerootTown_Evt_YouSavedBirch
 	goto_if_ne VAR_LITTLEROOT_TOWN_STATE, 0, Littleroot_Evt_GoSaveBirch
 	msgbox LittlerootTown_Text_IfYouGoInGrassPokemonWillJumpOut, MSGBOX_DEFAULT
 	release
 	end
+
+LittlerootTown_Evt_YouSavedBirch::
+	special GetPlayerBigGuyGirlString
+	msgbox Littleroot_Tx_FootprintsMan_YouSavedBirch, MSGBOX_DEFAULT
+	release
+	end
+
+Littleroot_Tx_FootprintsMan_YouSavedBirch:
+	.string "You saved Prof. Birch!\n"
+	.string "I'm so glad!\p"
+	.string "About the footprints I was\n"
+	.string "investigating before…\p"
+	.string "I think they were my own footprints.\n"
+	.string "Haha…$"
 
 LittlerootTown_EventScript_FatMan::
 	msgbox Littleroot_Tx_ILostMyPotion, MSGBOX_NPC
@@ -386,12 +400,6 @@ Littleroot_Evt_GoSaveBirchTrigger::
 	releaseall
 	end
 
-LittlerootTown_EventScript_YouSavedBirch::
-	special GetPlayerBigGuyGirlString
-	msgbox Littleroot_Tx_FootprintsMan_YouSavedBirch, MSGBOX_DEFAULT
-	release
-	end
-
 Littleroot_Tx_GoSaveBirchTrigger_CanYouGoSee:
 	.string "Um, hi\p"
 	.string "I can hear someone screaming outside!\n"
@@ -399,14 +407,6 @@ Littleroot_Tx_GoSaveBirchTrigger_CanYouGoSee:
 	.string "but I'm too scared of wild Pokémon!\p"
 	.string "Can you go see what's happening\n"
 	.string "for me?$"
-
-Littleroot_Tx_FootprintsMan_YouSavedBirch:
-	.string "You saved Prof. Birch!\n"
-	.string "I'm so glad!\p"
-	.string "About the footprints I was\n"
-	.string "investigating before…\p"
-	.string "I think they were my own footprints.\n"
-	.string "Haha…$"
 
 @ @@ Mom gives you shoes when you talk to her.
 Littleroot_Evt_Mom::
@@ -1004,11 +1004,6 @@ LittlerootTown_EventScript_SetRivalBirchPosForDexUpgradeFemale::
 	setobjectxy LOCALID_BIRCH, 14, 10
 	end
 
-LittlerootTown_EventScript_GoodLuck::
-	msgbox LittlerootTown_Text_GoodLuckCatchingPokemon, MSGBOX_DEFAULT
-	release
-	end
-
 LittlerootTown_EventScript_NeedPokemonTriggerLeft::
 	lockall
 	applymovement LOCALID_FOOTPRINTS_MAN, LittlerootTown_Movement_TwinApproachPlayerLeft
@@ -1171,10 +1166,6 @@ LittlerootTown_Text_IfYouGoInGrassPokemonWillJumpOut:
 LittlerootTown_Text_DangerousIfYouDontHavePokemon:
 	.string "It's dangerous if you don't have\n"
 	.string "your own POKéMON.$"
-
-LittlerootTown_Text_GoodLuckCatchingPokemon:
-	.string "Are you going to catch POKéMON?\n"
-	.string "Good luck!$"
 
 LittlerootTown_Text_TownSign:
 	.string "LITTLEROOT TOWN\n"

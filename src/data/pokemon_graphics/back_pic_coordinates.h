@@ -912,7 +912,7 @@ const struct MonCoords gMonBackPicCoords[] =
     [SPECIES_AMPHAROS] =
     {
         .size = MON_COORDS_SIZE(56, 64),
-        .y_offset = 3,
+        .y_offset = 0,
     },
     [SPECIES_BELLOSSOM] =
     {
@@ -1802,7 +1802,7 @@ const struct MonCoords gMonBackPicCoords[] =
     [SPECIES_AGGRON] =
     {
         .size = MON_COORDS_SIZE(64, 56),
-        .y_offset = 5,
+        .y_offset = 7,
     },
     [SPECIES_CASTFORM] =
     {

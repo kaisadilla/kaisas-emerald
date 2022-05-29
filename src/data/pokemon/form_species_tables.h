@@ -23,12 +23,6 @@ static const u16 sBeedrillFormSpeciesIdTable[] = {
     FORM_SPECIES_END,
 };
 
-static const u16 sPidgeotFormSpeciesIdTable[] = {
-    SPECIES_PIDGEOT,
-    SPECIES_PIDGEOT_MEGA,
-    FORM_SPECIES_END,
-};
-
 static const u16 sRattataFormSpeciesIdTable[] = {
     SPECIES_RATTATA,
     SPECIES_RATTATA_ALOLAN,

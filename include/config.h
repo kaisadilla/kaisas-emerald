@@ -36,8 +36,17 @@
 #endif
 
 // Kaisa's configuration
+// General configuration
 #define CONF_ALLOW_RUNNING_INDOORS TRUE
 
+// % chance for a Wild Encounter to be a double battle (if able) for each wild area type (0 to 100).
+#define CONF_DOUBLE_WILD_CHANCE_LAND       0
+#define CONF_DOUBLE_WILD_CHANCE_WATER      0
+#define CONF_DOUBLE_WILD_CHANCE_ROCKS      0
+#define CONF_DOUBLE_WILD_CHANCE_FISHING    0
+#define CONF_DOUBLE_WILD_CHANCE_DARK_GRASS 20
+
+// Game start
 #define CONF_FIRST_BATTLE_SPECIES  SPECIES_POOCHYENA
 #define CONF_FIRST_BATTLE_LEVEL    4
 

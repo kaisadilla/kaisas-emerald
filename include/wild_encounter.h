@@ -39,6 +39,10 @@ void FishingWildEncounter(u8 rod);
 u16 GetLocalWildMon(bool8 *isWaterMon);
 u16 GetLocalWaterMon(void);
 bool8 UpdateRepelCounter(void);
-bool8 TryDoDoubleWildBattle(void);
+/**
+ * Calculates the chance that a wild encounter will be a Double battle and returns whether it is or not.
+ * @param area The type of the wild area.
+ */
+bool8 ShouldWildBattleBeDouble(u8 area);
 
 #endif // GUARD_WILD_ENCOUNTER_H
