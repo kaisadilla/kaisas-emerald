@@ -251,7 +251,7 @@
               {
                 "min_level": 3,
                 "max_level": 6,
-                "species": "SPECIES_WINGULL"
+                "species": "SPECIES_TAILLOW"
               },
               {
                 "min_level": 3,
@@ -391,7 +391,7 @@
               {
                 "min_level": 4,
                 "max_level": 7,
-                "species": "SPECIES_WINGULL"
+                "species": "SPECIES_TAILLOW"
               },
               {
                 "min_level": 2,

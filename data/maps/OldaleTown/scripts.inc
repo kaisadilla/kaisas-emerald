@@ -40,45 +40,217 @@ Oldale_Evt_Twin::
 	release
 	end
 
-Oldale_Evt_ImLookingForSomeone_Male::
-	msgbox Oldale_Tx_ImLookingForSomeoneMale, MSGBOX_DEFAULT
+	Oldale_Evt_ImLookingForSomeone_Male::
+		msgbox Oldale_Tx_ImLookingForSomeoneMale, MSGBOX_DEFAULT
+		closemessage
+		return
+
+	Oldale_Evt_ImLookingForSomeone_Female::
+		msgbox Oldale_Tx_ImLookingForSomeoneFemale, MSGBOX_DEFAULT
+		closemessage
+		return
+
+		Oldale_Tx_ImLookingForSomeoneMale:
+			.string "A girl that told me to talk\n"
+			.string "to some boy if I saw him.\p"
+			.string "But I don't know how I'll\n"
+			.string "recognize that boy if I see him!$"
+
+		Oldale_Tx_ImLookingForSomeoneFemale:
+			.string "A boy that told me to talk\n"
+			.string "to some girl if I saw her.\p"
+			.string "But I don't know how I'll\n"
+			.string "recognize that girl if I see her!$"
+
+	Oldale_Evt_Twin_FollowRival::
+		msgbox Oldale_Tx_YouShouldFollowRival, MSGBOX_DEFAULT
+		release
+		end
+
+		Oldale_Tx_YouShouldFollowRival:
+			.string "You should go with your friend.\p"
+			.string "Making people wait is rude.$"
+
+	Oldale_Evt_Twin_NotBlockingPath::
+		msgbox Oldale_Tx_GoodLuckCatchingPokemon, MSGBOX_DEFAULT
+		release
+		end
+
+		Oldale_Tx_GoodLuckCatchingPokemon:
+			.string "Are you going to catch POKéMON?\n"
+			.string "Good luck!$"
+
+Oldale_Evt_MartEmployee::
+	lock
+	faceplayer
+	goto_if_set FLAG_RECEIVED_POTION_OLDALE, Oldale_Evt_ExplainPotion
+	goto_if_set FLAG_TEMP_1, Oldale_Evt_ExplainPotion
+	setflag FLAG_TEMP_1
+	playbgm MUS_FOLLOW_ME, FALSE
+	msgbox Oldale_Tx_IWorkAtPokemonMart, MSGBOX_DEFAULT
 	closemessage
-	return
-
-Oldale_Evt_ImLookingForSomeone_Female::
-	msgbox Oldale_Tx_ImLookingForSomeoneFemale, MSGBOX_DEFAULT
-	closemessage
-	return
-
-Oldale_Tx_ImLookingForSomeoneMale:
-	.string "A girl that told me to talk\n"
-	.string "to some boy if I saw him.\p"
-	.string "But I don't know how I'll\n"
-	.string "recognize that boy if I see him!$"
-
-Oldale_Tx_ImLookingForSomeoneFemale:
-	.string "A boy that told me to talk\n"
-	.string "to some girl if I saw her.\p"
-	.string "But I don't know how I'll\n"
-	.string "recognize that girl if I see her!$"
-
-Oldale_Evt_Twin_FollowRival::
-	msgbox Oldale_Tx_YouShouldFollowRival, MSGBOX_DEFAULT
-	release
+	switch VAR_FACING
+	case DIR_NORTH, Oldale_Evt_GoToMartNorth
+	case DIR_EAST, Oldale_Evt_GoToMartEast
+	goto Oldale_Evt_GoToMartEast
 	end
 
-Oldale_Tx_YouShouldFollowRival:
-	.string "You should go with your friend.\p"
-	.string "Making people wait is rude.$"
+	Oldale_Tx_IWorkAtPokemonMart:
+		.string "Hi!\n"
+		.string "I work at a Pokémon Mart.\p"
+		.string "Can I get you to come with me?$"
 
-Oldale_Evt_Twin_NotBlockingPath::
-	msgbox Oldale_Tx_GoodLuckCatchingPokemon, MSGBOX_DEFAULT
-	release
-	end
+	Oldale_Tx_ThisIsAPokemonMart:
+		.string "This is a Pokémon Mart.\n"
+		.string "Just look for our blue roof.\p"
+		.string "We sell a variety of goods including\n"
+		.string "Poké Balls for catching Pokémon.\p"
+		.string "Here, I'd like you to have this as\n"
+		.string "a promotional item.$"
 
-Oldale_Tx_GoodLuckCatchingPokemon:
-	.string "Are you going to catch POKéMON?\n"
-	.string "Good luck!$"
+	Oldale_Tx_PotionExplanation:
+		.string "A Potion can be used anytime, so it's\n"
+		.string "even more useful than a Pokémon Center\l"
+		.string "in certain situations.$"
+
+	Oldale_Evt_GoToMartNorth::
+		applymovement LOCALID_MART_EMPLOYEE, Oldale_Move_EmployeeNorth
+		applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_PlayerNorth
+		waitmovement 0
+		goto Oldale_Evt_ExplainPokemonMart
+		end
+
+		Oldale_Move_EmployeeNorth:
+			walk_down
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_in_place_faster_up
+			step_end
+
+		Oldale_Move_PlayerNorth:
+			lock_facing_direction
+			walk_down
+			unlock_facing_direction
+			walk_up
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_in_place_faster_up
+			step_end
+
+	Oldale_Evt_GoToMartEast::
+		applymovement LOCALID_MART_EMPLOYEE, Oldale_Move_EmployeeEast
+		applymovement OBJ_EVENT_ID_PLAYER, Oldale_Move_PlayerEast
+		waitmovement 0
+		goto Oldale_Evt_ExplainPokemonMart
+		end
+
+		Oldale_Move_EmployeeEast:
+			walk_down
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_in_place_faster_up
+			step_end
+
+		Oldale_Move_PlayerEast:
+			walk_down
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_up
+			walk_right
+			walk_right
+			walk_right
+			walk_right
+			walk_in_place_faster_up
+			step_end
+
+	Oldale_Evt_ExplainPokemonMart::
+		msgbox Oldale_Tx_ThisIsAPokemonMart, MSGBOX_DEFAULT
+		giveitem ITEM_POTION
+		goto_if_eq VAR_RESULT, FALSE, OldaleTown_EventScript_BagIsFull
+		msgbox Oldale_Tx_PotionExplanation, MSGBOX_DEFAULT
+		setflag FLAG_RECEIVED_POTION_OLDALE
+		fadedefaultbgm
+		release
+		end
+
+	Oldale_Evt_ExplainPotion::
+		msgbox Oldale_Tx_PotionExplanation, MSGBOX_DEFAULT
+		release
+		end
 
 @ ==================================================== @
 @ ================== Trigger events ================== @
@@ -412,7 +584,7 @@ OldaleTown_EventScript_SetOldaleState::
 	return
 
 OldaleTown_EventScript_MoveMartEmployee::
-	setobjectxyperm LOCALID_MART_EMPLOYEE, 13, 14
+	setobjectxyperm LOCALID_MART_EMPLOYEE, 24, 28
 	setobjectmovementtype LOCALID_MART_EMPLOYEE, MOVEMENT_TYPE_FACE_DOWN
 	return
 
@@ -424,97 +596,11 @@ OldaleTown_EventScript_Girl::
 	msgbox OldaleTown_Text_SavingMyProgress, MSGBOX_NPC
 	end
 
-OldaleTown_EventScript_MartEmployee::
-	lock
-	faceplayer
-	goto_if_set FLAG_RECEIVED_POTION_OLDALE, OldaleTown_EventScript_ExplainPotion
-	goto_if_set FLAG_TEMP_1, OldaleTown_EventScript_ExplainPotion
-	setflag FLAG_TEMP_1
-	playbgm MUS_FOLLOW_ME, FALSE
-	msgbox OldaleTown_Text_IWorkAtPokemonMart, MSGBOX_DEFAULT
-	closemessage
-	switch VAR_FACING
-	case DIR_SOUTH, OldaleTown_EventScript_GoToMartSouth
-	case DIR_NORTH, OldaleTown_EventScript_GoToMartNorth
-	case DIR_EAST, OldaleTown_EventScript_GoToMartEast
-	end
-
-OldaleTown_EventScript_GoToMartSouth::
-	applymovement LOCALID_MART_EMPLOYEE, OldaleTown_Movement_EmployeeSouth
-	applymovement OBJ_EVENT_ID_PLAYER, OldaleTown_Movement_PlayerSouth
-	waitmovement 0
-	goto OldaleTown_EventScript_ExplainPokemonMart
-	end
-
-OldaleTown_EventScript_GoToMartNorth::
-	applymovement LOCALID_MART_EMPLOYEE, OldaleTown_Movement_EmployeeNorth
-	applymovement OBJ_EVENT_ID_PLAYER, OldaleTown_Movement_PlayerNorth
-	waitmovement 0
-	goto OldaleTown_EventScript_ExplainPokemonMart
-	end
-
-OldaleTown_EventScript_GoToMartEast::
-	applymovement OBJ_EVENT_ID_PLAYER, OldaleTown_Movement_PlayerEast
-	applymovement LOCALID_MART_EMPLOYEE, OldaleTown_Movement_EmployeeEast
-	waitmovement 0
-	goto OldaleTown_EventScript_ExplainPokemonMart
-	end
-
-OldaleTown_EventScript_ExplainPokemonMart::
-	msgbox OldaleTown_Text_ThisIsAPokemonMart, MSGBOX_DEFAULT
-	giveitem ITEM_POTION
-	goto_if_eq VAR_RESULT, FALSE, OldaleTown_EventScript_BagIsFull
-	msgbox OldaleTown_Text_PotionExplanation, MSGBOX_DEFAULT
-	setflag FLAG_RECEIVED_POTION_OLDALE
-	fadedefaultbgm
-	release
-	end
-
-OldaleTown_EventScript_ExplainPotion::
-	msgbox OldaleTown_Text_PotionExplanation, MSGBOX_DEFAULT
-	release
-	end
-
 OldaleTown_EventScript_BagIsFull::
 	msgbox gText_TooBadBagIsFull, MSGBOX_DEFAULT
 	fadedefaultbgm
 	release
 	end
-
-OldaleTown_Movement_EmployeeEast:
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_in_place_faster_down
-	step_end
-
-OldaleTown_Movement_EmployeeSouth:
-	walk_left
-	walk_up
-	walk_up
-	walk_right
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_in_place_faster_down
-	step_end
-
-OldaleTown_Movement_EmployeeNorth:
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_in_place_faster_down
-	step_end
 
 OldaleTown_Movement_Unknown1:
 	walk_up
@@ -530,38 +616,6 @@ OldaleTown_Movement_Unknown1:
 	walk_up
 	delay_8
 	walk_in_place_faster_down
-	step_end
-
-OldaleTown_Movement_PlayerEast:
-	walk_right
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	step_end
-
-OldaleTown_Movement_PlayerSouth:
-	delay_16
-	delay_16
-	delay_16
-	delay_16
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	step_end
-
-OldaleTown_Movement_PlayerNorth:
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
 	step_end
 
 OldaleTown_Movement_Unknown2:
@@ -627,24 +681,6 @@ OldaleTown_Movement_ReturnToOriginalPosition:
 OldaleTown_Text_SavingMyProgress:
 	.string "I want to take a rest, so I'm saving my\n"
 	.string "progress.$"
-
-OldaleTown_Text_IWorkAtPokemonMart:
-	.string "Hi!\n"
-	.string "I work at a POKéMON MART.\p"
-	.string "Can I get you to come with me?$"
-
-OldaleTown_Text_ThisIsAPokemonMart:
-	.string "This is a POKéMON MART.\n"
-	.string "Just look for our blue roof.\p"
-	.string "We sell a variety of goods including\n"
-	.string "POKé BALLS for catching POKéMON.\p"
-	.string "Here, I'd like you to have this as\n"
-	.string "a promotional item.$"
-
-OldaleTown_Text_PotionExplanation:
-	.string "A POTION can be used anytime, so it's\n"
-	.string "even more useful than a POKéMON CENTER\l"
-	.string "in certain situations.$"
 
 OldaleTown_Text_WaitDontComeInHere:
 	.string "Aaaaah! Wait!\n"

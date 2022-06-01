@@ -36,8 +36,8 @@
 #define MOVE_POWER_WEAK   3 // Significantly lower than best and good.
 
 // AI Flags. Most run specific functions to update score, new flags are used for internal logic in other scripts
-#define AI_FLAG_CHECK_BAD_MOVE        (1 << 0)
-#define AI_FLAG_TRY_TO_FAINT          (1 << 1)
+#define AI_FLAG_CHECK_BAD_MOVE        (1 << 0) // AI tries not to use ineffective moves ??
+#define AI_FLAG_TRY_TO_FAINT          (1 << 1) // AI tries to knock out player's pokémon's when able ??
 #define AI_FLAG_CHECK_VIABILITY       (1 << 2)
 #define AI_FLAG_SETUP_FIRST_TURN      (1 << 3)
 #define AI_FLAG_RISKY                 (1 << 4)
