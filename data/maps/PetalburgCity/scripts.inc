@@ -3,6 +3,12 @@
 .set LOCALID_WALLYS_DAD, 5
 .set LOCALID_GYM_BOY, 8
 .set LOCALID_SCOTT, 9
+.set LOCALID_NORMAN, 10
+
+.set PETALBURG_STATE_WALLY_TUTORIAL_STARTED, 2
+.set PETALBURG_STATE_WALLY_TUTORIAL_ENDED, 3
+.set PETALBURG_STATE_WALLY_DAD_ARRIVED, 4
+.set PETALBURG_STATE_WALLY_DAD_GAVE_HM_SURF, 5
 
 PetalburgCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, PetalburgCity_OnTransition
@@ -11,6 +17,7 @@ PetalburgCity_MapScripts::
 
 PetalburgCity_OnTransition:
 	setflag FLAG_VISITED_PETALBURG_CITY
+	call_if_eq VAR_PETALBURG_CITY_STATE, 0, Petalburg_Evt_MoveWallyToTutorialSpot
 	call_if_eq VAR_PETALBURG_CITY_STATE, 0, PetalburgCity_EventScript_MoveGymBoyToWestEntrance
 	call_if_eq VAR_PETALBURG_CITY_STATE, 2, PetalburgCity_EventScript_DisableMapNameAndMusic
 	call_if_eq VAR_PETALBURG_CITY_STATE, 4, PetalburgCity_EventScript_DisableMapNameAndMusic
@@ -31,16 +38,240 @@ PetalburgCity_EventScript_SetGymDoorsUnlocked::
 	return
 
 PetalburgCity_OnFrame:
-	map_script_2 VAR_PETALBURG_CITY_STATE, 2, PetalburgCity_EventScript_WallyTutorial
+	@map_script_2 VAR_PETALBURG_CITY_STATE, 2, Petalburg_Evt_ContinueWallyTutorial
 	map_script_2 VAR_PETALBURG_CITY_STATE, 4, PetalburgCity_EventScript_WalkToWallyHouse
 	.2byte 0
 
-PetalburgCity_EventScript_WallyTutorial::
+@ ===================================================== @
+@ =====================  OnEvents ===================== @
+@ ===================================================== @
+Petalburg_Evt_MoveWallyToTutorialSpot::
+	clearflag FLAG_HIDE_PETALBURG_CITY_WALLY
+	setobjectxyperm LOCALID_WALLY, 19, 19
+	setobjectmovementtype LOCALID_WALLY, MOVEMENT_TYPE_FACE_RIGHT
+	return
+
+@ ==================================================== @
+@ ===================== Trainers ===================== @
+@ ==================================================== @
+Petalburg_Evt_NormanWelcomesYou0::
+	setvar VAR_0x8008, 0
+	goto Petalburg_Evt_NormanWelcomesYou
+	end
+Petalburg_Evt_NormanWelcomesYou1::
+	setvar VAR_0x8008, 1
+	goto Petalburg_Evt_NormanWelcomesYou
+	end
+
+Petalburg_Evt_NormanWelcomesYou::
+	lockall
+	playse SE_PIN
+	applymovement LOCALID_NORMAN, Common_Movement_ExclamationMark
+	waitmovement 0
+	call_if_eq VAR_0x8008, 0, Petalburg_Evt_NormanGoToPlayer0
+	call_if_eq VAR_0x8008, 1, Petalburg_Evt_NormanGoToPlayer1
+	waitmovement 0
+	msgbox Petalburg_Tx_NormanYoureHereWithYourPokemon, MSGBOX_DEFAULT
+	closemessage
+	goto Petalburg_Evt_BeginWallyTutorial
+	end
+
+	Petalburg_Evt_NormanGoToPlayer0::
+	applymovement LOCALID_NORMAN, Petalburg_Move_NormanGoToPlayer0
+	return
+
+		Petalburg_Move_NormanGoToPlayer0:
+			walk_down
+			walk_down
+			walk_right
+			step_end
+
+	Petalburg_Evt_NormanGoToPlayer1::
+		applymovement LOCALID_NORMAN, Petalburg_Move_NormanGoToPlayer1
+		return
+
+		Petalburg_Move_NormanGoToPlayer1:
+			walk_down
+			walk_down
+			walk_down
+			walk_right
+			step_end
+
+	Petalburg_Tx_NormanYoureHereWithYourPokemon:
+		.string "Dad: Hm?\p"
+		.string "Well, if it isn't {PLAYER}!\n"
+		.string "So you're all finished moving in?\p"
+		.string "I'm surprised that you managed to\n"
+		.string "get here by yourself.\p"
+		.string "Oh, I see.\n"
+		.string "You're with your Pokémon.\p"
+		.string "Hm… Then I guess you're going to\n"
+		.string "become a trainer like me, {PLAYER}.\p"
+		.string "That's great news!\n"
+		.string "I'll be looking forward to it!$"
+
+	Petalburg_Evt_BeginWallyTutorial::
+		call_if_eq VAR_0x8008, 0, Petalburg_Evt_WallyArrivesToTutorial0
+		call_if_eq VAR_0x8008, 1, Petalburg_Evt_WallyArrivesToTutorial1
+
+		applymovement LOCALID_NORMAN, Common_Movement_FaceLeft
+		waitmovement 0
+
+		msgbox Petalburg_Tx_WallyIdLikeAPokemon, MSGBOX_DEFAULT
+		msgbox Petalburg_Tx_DadOhYoureWallyRight, MSGBOX_DEFAULT
+		msgbox Petalburg_Tx_WallyIveNeverCaughtAPokemon, MSGBOX_DEFAULT
+		msgbox Petalburg_Tx_DadHmISee, MSGBOX_DEFAULT
+
+		applymovement LOCALID_NORMAN, Common_Movement_FaceRight
+		waitmovement 0
+
+		msgbox Petalburg_Tx_DadPlayerGoWithWally, MSGBOX_DEFAULT
+
+		applymovement LOCALID_NORMAN, Common_Movement_FaceLeft
+		waitmovement 0
+
+		msgbox Petalburg_Tx_IllLoanYouMyZigzagoon, MSGBOX_DEFAULT
+		msgbox Petalburg_Tx_WallyThankYouAndDadGivesPokeBall, MSGBOX_DEFAULT
+		msgbox Petalburg_Tx_WallyOhWowThankYou, MSGBOX_DEFAULT
+		closemessage
+
+		call_if_eq VAR_0x8008, 0, Petalburg_Evt_DadMovesAwayUp
+		call_if_eq VAR_0x8008, 1, Petalburg_Evt_DadMovesAwayDown
+
+		setflag FLAG_DONT_TRANSITION_MUSIC
+		playbgm MUS_FOLLOW_ME, FALSE
+		call_if_eq VAR_0x8008, 0, Petalburg_Evt_WallyMovesInFrontOfPlayer0
+		call_if_eq VAR_0x8008, 1, Petalburg_Evt_WallyMovesInFrontOfPlayer1
+
+		goto Petalburg_Evt_ContinueWallyTutorial
+		end
+
+		Petalburg_Evt_WallyArrivesToTutorial0::
+			applymovement LOCALID_WALLY, Petalburg_Move_WallyArrivesToTutorial0
+			waitmovement 0
+			return
+
+			Petalburg_Move_WallyArrivesToTutorial0:
+				walk_up
+				walk_up
+				walk_up
+				walk_up
+				walk_up
+				walk_up
+				walk_up
+				walk_right
+				step_end
+
+		Petalburg_Evt_WallyArrivesToTutorial1::
+			applymovement LOCALID_WALLY, Petalburg_Move_WallyArrivesToTutorial1
+			waitmovement 0
+			return
+
+			Petalburg_Move_WallyArrivesToTutorial1:
+				walk_up
+				walk_up
+				walk_up
+				walk_up
+				walk_up
+				walk_up
+				walk_right
+				step_end
+
+		Petalburg_Evt_DadMovesAwayUp::
+			applymovement LOCALID_NORMAN, Petalburg_Move_DadMovesAwayUp
+			waitmovement 0
+			return
+
+			Petalburg_Move_DadMovesAwayUp:
+				walk_up
+				walk_in_place_fast_down
+				step_end
+
+		Petalburg_Evt_DadMovesAwayDown::
+			applymovement LOCALID_NORMAN, Petalburg_Move_DadMovesAwayDown
+			waitmovement 0
+			return
+
+			Petalburg_Move_DadMovesAwayDown:
+				walk_down
+				walk_in_place_fast_up
+				step_end
+
+		Petalburg_Evt_WallyMovesInFrontOfPlayer0::
+			applymovement LOCALID_WALLY, Petalburg_Move_WallyMovesInFrontOfPlayer0
+			waitmovement 0
+			return
+
+			Petalburg_Move_WallyMovesInFrontOfPlayer0:
+				walk_down
+				walk_right
+				walk_right
+				walk_right
+				walk_up
+				walk_in_place_fast_right
+				step_end
+
+		Petalburg_Evt_WallyMovesInFrontOfPlayer1::
+			applymovement LOCALID_WALLY, Petalburg_Move_WallyMovesInFrontOfPlayer1
+			waitmovement 0
+			return
+
+			Petalburg_Move_WallyMovesInFrontOfPlayer1:
+				walk_up
+				walk_right
+				walk_right
+				walk_right
+				walk_down
+				walk_in_place_fast_right
+				step_end
+
+		Petalburg_Tx_WallyIdLikeAPokemon:
+			.string "Um… I…\n"
+			.string "I'd like to get a Pokémon, please…$"
+
+		Petalburg_Tx_DadOhYoureWallyRight:
+			.string "Dad: Hm? You're… Uh… Oh, right.\n"
+			.string "You're Wally, right?$"
+
+		Petalburg_Tx_WallyIveNeverCaughtAPokemon:
+			.string "Wally: I'm going to go stay with my\n"
+			.string "relatives in Verdanturf Town.\p"
+			.string "I thought I would be lonely by myself,\n"
+			.string "so I wanted to take a Pokémon along.\p"
+			.string "But I've never caught a Pokémon before.\n"
+			.string "I don't know how…$"
+
+		Petalburg_Tx_DadHmISee:
+			.string "Dad: Hm. I see.$"
+
+		Petalburg_Tx_DadPlayerGoWithWally:
+			.string "Dad: {PLAYER}, you heard that,\n"
+			.string "right?\p"
+			.string "Go with Wally and make sure that he\n"
+			.string "safely catches a Pokémon.$"
+
+		Petalburg_Tx_IllLoanYouMyZigzagoon:
+			.string "Wally, here, I'll loan you my Pokémon.\p"
+			.string "Wally received a Zigzagoon!$"
+
+		Petalburg_Tx_WallyThankYouAndDadGivesPokeBall:
+			.string "Wally: Oh, wow!\n"
+			.string "A Pokémon!\p"
+			.string "Dad: Hm. I'll give you some\n"
+			.string "Poké Balls, too. Go for it!\p"
+			.string "Wally received some Poké Balls!$"
+
+		Petalburg_Tx_WallyOhWowThankYou:
+			.string "Wally: Oh, wow!\n"
+			.string "Thank you!$"
+
+			
+Petalburg_Evt_ContinueWallyTutorial::
 	lockall
 	special SavePlayerParty
 	special PutZigzagoonInPlayerParty
-	applymovement LOCALID_WALLY, PetalburgCity_Movement_WallyTutorialWally
-	applymovement OBJ_EVENT_ID_PLAYER, PetalburgCity_Movement_WallyTutorialPlayer
+	applymovement LOCALID_WALLY, Petalburg_Move_WallyTutorialWally
+	applymovement OBJ_EVENT_ID_PLAYER, Petalburg_Move_WallyTutorialPlayer
 	waitmovement 0
 	msgbox Route102_Text_WatchMeCatchPokemon, MSGBOX_DEFAULT
 	special StartWallyTutorialBattle
@@ -60,6 +291,74 @@ PetalburgCity_EventScript_WallyTutorial::
 	waitstate
 	releaseall
 	end
+
+	Petalburg_Move_WallyTutorialPlayer:
+		delay_8
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_down
+		walk_down
+		walk_down
+		walk_down
+		walk_down
+		walk_right
+		walk_right
+		walk_in_place_faster_right
+		step_end
+
+	Petalburg_Move_WallyTutorialWally:
+		delay_8
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_right
+		walk_down
+		walk_down
+		walk_down
+		walk_down
+		walk_down
+		walk_right
+		walk_right
+		walk_right
+		step_end
+
+
+@@@@@@@@@@@@@@@@@@@@@@@
+@@@ here be dragons @@@
+@@@@@@@@@@@@@@@@@@@@@@@
 
 PetalburgCity_EventScript_WalkToWallyHouse::
 	lockall
@@ -148,80 +447,6 @@ PetalburgCity_Movement_WalkToWallyHouseWallysDad:
 PetalburgCity_Movement_WalkInsideHouseWallysDad:
 	walk_up
 	set_invisible
-	step_end
-
-PetalburgCity_Movement_WallyTutorialPlayer:
-	delay_8
-	walk_down
-	walk_down
-	walk_down
-	walk_down
-	walk_down
-	walk_down
-	walk_down
-	walk_down
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_up
-	walk_up
-	walk_in_place_faster_right
-	step_end
-
-PetalburgCity_Movement_WallyTutorialWally:
-	delay_8
-	walk_down
-	walk_down
-	walk_down
-	walk_down
-	walk_down
-	walk_down
-	walk_down
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_up
-	walk_up
-	walk_right
-	delay_16
-	walk_in_place_faster_up
-	delay_16
-	delay_16
-	walk_in_place_faster_right
 	step_end
 
 PetalburgCity_EventScript_GymSign::
