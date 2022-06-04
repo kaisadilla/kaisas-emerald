@@ -65,6 +65,7 @@ Petalburg_Evt_NormanWelcomesYou1::
 
 Petalburg_Evt_NormanWelcomesYou::
 	lockall
+	clearflag FLAG_HIDE_PETALBURG_GYM_WALLY
 	playse SE_PIN
 	applymovement LOCALID_NORMAN, Common_Movement_ExclamationMark
 	waitmovement 0
@@ -160,6 +161,8 @@ Petalburg_Evt_NormanWelcomesYou::
 				walk_up
 				walk_up
 				walk_right
+				walk_right
+				walk_right
 				step_end
 
 		Petalburg_Evt_WallyArrivesToTutorial1::
@@ -174,6 +177,8 @@ Petalburg_Evt_NormanWelcomesYou::
 				walk_up
 				walk_up
 				walk_up
+				walk_right
+				walk_right
 				walk_right
 				step_end
 
@@ -312,8 +317,6 @@ Petalburg_Evt_ContinueWallyTutorial::
 		walk_right
 		walk_right
 		walk_right
-		walk_right
-		walk_right
 		walk_down
 		walk_down
 		walk_down
@@ -343,8 +346,6 @@ Petalburg_Evt_ContinueWallyTutorial::
 		walk_right
 		walk_right
 		walk_right
-		walk_right
-		walk_right
 		walk_down
 		walk_down
 		walk_down
@@ -355,6 +356,218 @@ Petalburg_Evt_ContinueWallyTutorial::
 		walk_right
 		step_end
 
+
+Petalburg_Evt_Scott0::
+	lockall
+	addobject LOCALID_SCOTT
+	setvar VAR_0x8008, 0
+	setobjectxy LOCALID_SCOTT, 9, 19
+	goto Petalburg_Evt_Scott
+	end
+
+Petalburg_Evt_Scott1::
+	lockall
+	addobject LOCALID_SCOTT
+	setvar VAR_0x8008, 1
+	setobjectxy LOCALID_SCOTT, 9, 19
+	goto Petalburg_Evt_Scott
+	end
+
+Petalburg_Evt_Scott2::
+	lockall
+	addobject LOCALID_SCOTT
+	setvar VAR_0x8008, 2
+	setobjectxy LOCALID_SCOTT, 9, 20
+	goto Petalburg_Evt_Scott
+	end
+
+Petalburg_Evt_Scott3::
+	lockall
+	addobject LOCALID_SCOTT
+	setvar VAR_0x8008, 3
+	setobjectxy LOCALID_SCOTT, 9, 21
+	goto Petalburg_Evt_Scott
+	end
+
+Petalburg_Evt_Scott::
+	applymovement LOCALID_SCOTT, Petalburg_Move_ScottStartWalkLeft
+	waitmovement 0
+	playse SE_PIN
+	applymovement LOCALID_SCOTT, Common_Movement_ExclamationMark
+	waitmovement 0
+	applymovement LOCALID_SCOTT, Common_Movement_Delay48
+	waitmovement 0
+	applymovement LOCALID_SCOTT, Petalburg_Move_ScottApproachPlayer
+	waitmovement 0
+
+	call_if_eq VAR_0x8008, 0, Petalburg_Evt_ScottMoveUp
+
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight
+	waitmovement 0
+	setvar VAR_SCOTT_STATE, 1
+	msgbox PetalburgCity_Text_AreYouATrainer, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_SCOTT, Common_Movement_WalkInPlaceFasterRight
+	waitmovement 0
+	delay 30
+	msgbox PetalburgCity_Text_WellMaybeNot, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_SCOTT, Common_Movement_WalkInPlaceFasterLeft
+	waitmovement 0
+	delay 30
+	msgbox PetalburgCity_Text_ImLookingForTalentedTrainers, MSGBOX_DEFAULT
+	closemessage
+	call_if_eq VAR_0x8008, 0, Petalburg_Evt_ScottExit0
+	call_if_eq VAR_0x8008, 1, Petalburg_Evt_ScottExit1
+	call_if_eq VAR_0x8008, 2, Petalburg_Evt_ScottExit2
+	call_if_eq VAR_0x8008, 3, Petalburg_Evt_ScottExit3
+	setvar VAR_SCOTT_PETALBURG_ENCOUNTER, 1
+	removeobject LOCALID_SCOTT
+	releaseall
+	end
+
+	Petalburg_Move_ScottStartWalkLeft:
+		walk_left
+		walk_left
+		walk_left
+		walk_left
+		step_end
+
+	Petalburg_Move_ScottApproachPlayer:
+		walk_left
+		walk_left
+		walk_left
+		walk_left
+		step_end
+
+	Petalburg_Evt_ScottMoveUp::
+		applymovement LOCALID_SCOTT, Petalburg_Move_ScottWalkUp
+		waitmovement 0
+		return
+
+		Petalburg_Move_ScottWalkUp:
+		walk_up
+		walk_in_place_left
+		step_end
+
+	Petalburg_Evt_ScottExit0::
+		applymovement OBJ_EVENT_ID_PLAYER, Petalburg_Move_PlayerWatchScottExit
+		applymovement LOCALID_SCOTT, Petalburg_Move_ScottExit0
+		waitmovement 0
+		return
+
+		Petalburg_Move_ScottExit0:
+			walk_down
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			step_end
+
+		Petalburg_Move_PlayerWatchScottExit:
+			delay_16
+			walk_in_place_faster_down
+			delay_16
+			delay_16
+			delay_8
+			walk_in_place_faster_left
+			step_end
+
+	Petalburg_Evt_ScottExit1::
+		applymovement OBJ_EVENT_ID_PLAYER, PetalburgCity_Movement_PlayerWatchScottExit1
+		applymovement LOCALID_SCOTT, Petalburg_Move_ScottExit1
+		waitmovement 0
+		return
+		
+		Petalburg_Move_ScottExit1:
+			walk_down
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			step_end
+
+		PetalburgCity_Movement_PlayerWatchScottExit1:
+			delay_16
+			walk_in_place_faster_down
+			delay_16
+			delay_8
+			walk_in_place_faster_left
+			step_end
+
+	Petalburg_Evt_ScottExit2::
+		applymovement OBJ_EVENT_ID_PLAYER, PetalburgCity_Movement_PlayerWatchScottExit2
+		applymovement LOCALID_SCOTT, Petalburg_Move_ScottExit2
+		waitmovement 0
+		return
+
+		Petalburg_Move_ScottExit2:
+			walk_up
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			step_end
+
+		PetalburgCity_Movement_PlayerWatchScottExit2:
+			delay_16
+			walk_in_place_faster_down
+			delay_16
+			delay_8
+			walk_in_place_faster_left
+			step_end
+
+
+	Petalburg_Evt_ScottExit3::
+		applymovement OBJ_EVENT_ID_PLAYER, PetalburgCity_Movement_PlayerWatchScottExit3
+		applymovement LOCALID_SCOTT, Petalburg_Move_ScottExit3
+		waitmovement 0
+		return
+
+		Petalburg_Move_ScottExit3:
+			walk_up
+			walk_up
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			walk_left
+			step_end
+
+		PetalburgCity_Movement_PlayerWatchScottExit3:
+			delay_16
+			walk_in_place_faster_up
+			delay_16
+			delay_8
+			walk_in_place_faster_left
+			step_end
 
 @@@@@@@@@@@@@@@@@@@@@@@
 @@@ here be dragons @@@
@@ -725,204 +938,6 @@ PetalburgCity_Movement_PlayerWalkToGym3:
 	walk_right
 	walk_up
 	walk_up
-	step_end
-
-PetalburgCity_EventScript_Scott0::
-	lockall
-	addobject LOCALID_SCOTT
-	setvar VAR_0x8008, 0
-	setobjectxy LOCALID_SCOTT, 13, 10
-	goto PetalburgCity_EventScript_Scott
-	end
-
-PetalburgCity_EventScript_Scott1::
-	lockall
-	addobject LOCALID_SCOTT
-	setvar VAR_0x8008, 1
-	setobjectxy LOCALID_SCOTT, 13, 11
-	goto PetalburgCity_EventScript_Scott
-	end
-
-PetalburgCity_EventScript_Scott2::
-	lockall
-	addobject LOCALID_SCOTT
-	setvar VAR_0x8008, 2
-	setobjectxy LOCALID_SCOTT, 13, 12
-	goto PetalburgCity_EventScript_Scott
-	end
-
-PetalburgCity_EventScript_Scott3::
-	lockall
-	addobject LOCALID_SCOTT
-	setvar VAR_0x8008, 3
-	setobjectxy LOCALID_SCOTT, 13, 13
-	goto PetalburgCity_EventScript_Scott
-	end
-
-PetalburgCity_EventScript_Scott::
-	applymovement LOCALID_SCOTT, PetalburgCity_Movement_ScottStartWalkLeft
-	waitmovement 0
-	playse SE_PIN
-	applymovement LOCALID_SCOTT, Common_Movement_ExclamationMark
-	waitmovement 0
-	applymovement LOCALID_SCOTT, Common_Movement_Delay48
-	waitmovement 0
-	applymovement LOCALID_SCOTT, PetalburgCity_Movement_ScottApproachPlayer
-	waitmovement 0
-	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight
-	waitmovement 0
-	setvar VAR_SCOTT_STATE, 1
-	msgbox PetalburgCity_Text_AreYouATrainer, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_SCOTT, Common_Movement_WalkInPlaceFasterRight
-	waitmovement 0
-	delay 30
-	msgbox PetalburgCity_Text_WellMaybeNot, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_SCOTT, Common_Movement_WalkInPlaceFasterLeft
-	waitmovement 0
-	delay 30
-	msgbox PetalburgCity_Text_ImLookingForTalentedTrainers, MSGBOX_DEFAULT
-	closemessage
-	call_if_eq VAR_0x8008, 0, PetalburgCity_EventScript_ScottExit0
-	call_if_eq VAR_0x8008, 1, PetalburgCity_EventScript_ScottExit1
-	call_if_eq VAR_0x8008, 2, PetalburgCity_EventScript_ScottExit2
-	call_if_eq VAR_0x8008, 3, PetalburgCity_EventScript_ScottExit3
-	setvar VAR_SCOTT_PETALBURG_ENCOUNTER, 1
-	removeobject LOCALID_SCOTT
-	releaseall
-	end
-
-PetalburgCity_EventScript_ScottExit0::
-	applymovement OBJ_EVENT_ID_PLAYER, PetalburgCity_Movement_PlayerWatchScottExit0
-	applymovement LOCALID_SCOTT, PetalburgCity_Movement_ScottExit0
-	waitmovement 0
-	return
-
-PetalburgCity_EventScript_ScottExit1::
-	applymovement OBJ_EVENT_ID_PLAYER, PetalburgCity_Movement_PlayerWatchScottExit1
-	applymovement LOCALID_SCOTT, PetalburgCity_Movement_ScottExit1
-	waitmovement 0
-	return
-
-PetalburgCity_EventScript_ScottExit2::
-	applymovement OBJ_EVENT_ID_PLAYER, PetalburgCity_Movement_PlayerWatchScottExit2
-	applymovement LOCALID_SCOTT, PetalburgCity_Movement_ScottExit2
-	waitmovement 0
-	return
-
-PetalburgCity_EventScript_ScottExit3::
-	applymovement OBJ_EVENT_ID_PLAYER, PetalburgCity_Movement_PlayerWatchScottExit3
-	applymovement LOCALID_SCOTT, PetalburgCity_Movement_ScottExit3
-	waitmovement 0
-	return
-
-PetalburgCity_Movement_ScottStartWalkLeft:
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	step_end
-
-PetalburgCity_Movement_ScottApproachPlayer:
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	step_end
-
-PetalburgCity_Movement_ScottExit0:
-	walk_down
-	walk_down
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	step_end
-
-PetalburgCity_Movement_PlayerWatchScottExit0:
-	delay_16
-	walk_in_place_faster_down
-	delay_16
-	delay_16
-	delay_8
-	walk_in_place_faster_left
-	step_end
-
-PetalburgCity_Movement_ScottExit1:
-	walk_down
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	step_end
-
-PetalburgCity_Movement_PlayerWatchScottExit1:
-	delay_16
-	walk_in_place_faster_down
-	delay_16
-	delay_8
-	walk_in_place_faster_left
-	step_end
-
-PetalburgCity_Movement_ScottExit2:
-	walk_down
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	step_end
-
-PetalburgCity_Movement_PlayerWatchScottExit2:
-	delay_16
-	walk_in_place_faster_down
-	delay_16
-	delay_8
-	walk_in_place_faster_left
-	step_end
-
-PetalburgCity_Movement_ScottExit3:
-	walk_up
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	step_end
-
-PetalburgCity_Movement_PlayerWatchScottExit3:
-	delay_16
-	walk_in_place_faster_up
-	delay_16
-	delay_8
-	walk_in_place_faster_left
 	step_end
 
 PetalburgCity_EventScript_GymBoy::

@@ -2,6 +2,201 @@
 @  These are labeled in DewfordTown/scripts.inc
 .set LOCALID_RIVAL, 34
 
+
+@ ==================================================== @
+@ ============= Environment interactions ============= @
+@ ==================================================== @
+Route4_EvtSign_RouteSignPetalburg::
+	msgbox Route104_Text_RouteSignPetalburg, MSGBOX_SIGN
+	end
+
+	Route104_Text_RouteSignPetalburg:
+		.string "Route 4\n"
+		.string "{RIGHT_ARROW} Petalburg City\l"
+		.string "{UP_ARROW} Petalburg Woods\l"
+		.string "{UP_ARROW} Rustboro City$"
+
+@ ==================================================== @
+@ ================= NPC Interactions ================= @
+@ ==================================================== @
+Route4_EvtNPC_Boy1::
+	msgbox Route4_Tx_ThrowBallAtWeakenedPokemon, MSGBOX_NPC
+	end
+
+	Route4_Tx_ThrowBallAtWeakenedPokemon:
+		.string "If you're going to throw a Poké Ball,\n"
+		.string "weaken the wild Pokémon first.\p"
+		.string "It will be easier to catch if it's been\n"
+		.string "poisoned, burned, or lulled to sleep.$"
+
+Route4_EvtNPC_Boy3::
+	msgbox Route4_Tx_KrabbyPinchedMeInTheBeach, MSGBOX_NPC
+	end
+
+	Route4_Tx_KrabbyPinchedMeInTheBeach:
+		.string "I went for a walk in the beach,\n"
+		.string "but I got pinched by a Krabby.\p"
+		.string "Pokémon really are everywhere.$"
+
+Route4_EvtNPC_Girl2::
+	msgbox Route4_Tx_ImNotATrainer, MSGBOX_NPC
+	end
+
+	Route4_Tx_ImNotATrainer:
+		.string "Oh, no, I'm not a Trainer.\p"
+		.string "But that's right, if Trainers lock eyes,\n"
+		.string "it's a challenge to battle.\p"
+		.string "If you don't want to battle,\n"
+		.string "stay out of their sight.$"
+
+Route4_EvtNPC_BugCatcher::
+	msgbox Route4_Tx_WhatsItLikeAtBottomOfSea, MSGBOX_SIGN
+	end
+
+	Route4_Tx_WhatsItLikeAtBottomOfSea:
+		.string "The sea, huh?\p"
+		.string "I wonder what it's like at the bottom\n"
+		.string "of the sea?$"
+
+Route4_EvtNPC_Girl1::
+	msgbox Route4_Tx_BrineyLivesInSeasideCottage, MSGBOX_NPC
+	end
+
+	Route4_Tx_BrineyLivesInSeasideCottage:
+		.string "That seaside cottage is where\n"
+		.string "MR. Briney lives.\p"
+		.string "He was once a mighty sailor who never\n"
+		.string "feared the sea, however stormy.$"
+
+Route4_EvtNPC_Woman::
+	msgbox Route4_Tx_OnlyThrowBallAtWildPokemon, MSGBOX_NPC
+	end
+
+	Route4_Tx_OnlyThrowBallAtWildPokemon:
+		.string "You're a thief if you try to steal\n"
+		.string "someone else's Pokémon.\p"
+		.string "You should throw Poké Balls only at\n"
+		.string "wild Pokémon.$"
+
+@ ==================================================== @
+@ ===================== Trainers ===================== @
+@ ==================================================== @
+Route4_EvtTrainer_Billy::
+	trainerbattle_single TRAINER_BILLY, Route4_Tx_BillyIntro, Route4_Tx_BillyDefeat
+	msgbox Route4_Tx_BillyPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+	Route4_Tx_BillyIntro:
+		.string "Leaving footprints in\n"
+		.string "the sand is so fun!$"
+
+	Route4_Tx_BillyDefeat:
+		.string "Waah! I got sand in my runners!\n"
+		.string "They're all gritty!$"
+
+	Route4_Tx_BillyPostBattle:
+		.string "I want to leave my footprints in\n"
+		.string "the sand everywhere, but they\l"
+		.string "disappear quickly…$"
+
+Route4_EvtTrainer_Darian::
+	trainerbattle_single TRAINER_DARIAN, Route4_Tx_DarianIntro, Route4_Tx_DarianDefeat
+	msgbox Route4_Tx_DarianPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+	Route4_Tx_DarianIntro:
+		.string "I fished up some\n"
+		.string "tough-looking Pokémon!\p"
+		.string "They have this magical quality to them!\n"
+		.string "They surely look tough, yes they do!$"
+
+	Route4_Tx_DarianDefeat:
+		.string "What the…$"
+
+	Route4_Tx_DarianPostBattle:
+		.string "Magikarp, Feebas…\p"
+		.string "You surely don't live up\n"
+		.string "to your names, do you?$"
+
+Route4_EvtTrainer_Cindy::
+	trainerbattle_single TRAINER_CINDY_1, Route4_Tx_CindyIntro, Route4_Tx_CindyDefeat, Route4_Evt_TryRegisterCindyAfterBattle
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route4_Evt_RematchCindy
+	setvar VAR_0x8004, TRAINER_CINDY_1
+	specialvar VAR_RESULT, IsTrainerRegistered
+	goto_if_eq VAR_RESULT, FALSE, Route4_Evt_TryRegisterCindy
+	msgbox Route4_Tx_CindyPostBattle, MSGBOX_DEFAULT
+	release
+	end
+
+	Route4_Evt_TryRegisterCindyAfterBattle::
+		special PlayerFaceTrainerAfterBattle
+		waitmovement 0
+		goto_if_set FLAG_HAS_MATCH_CALL, Route4_Evt_RegisterCindyAfterBattle
+		release
+		end
+
+	Route4_Evt_RegisterCindyAfterBattle::
+		msgbox Route4_Tx_CindyRegister2, MSGBOX_DEFAULT
+		register_matchcall TRAINER_CINDY_1
+		release
+		end
+
+	Route4_Evt_TryRegisterCindy::
+		goto_if_set FLAG_HAS_MATCH_CALL, Route4_Evt_RegisterCindy
+		msgbox Route4_Tx_CindyPostBattle, MSGBOX_DEFAULT
+		release
+		end
+
+	Route4_Evt_RegisterCindy::
+		msgbox Route4_Tx_CindyRegister1, MSGBOX_DEFAULT
+		register_matchcall TRAINER_CINDY_1
+		release
+		end
+
+	Route4_Evt_RematchCindy::
+		trainerbattle_rematch TRAINER_CINDY_1, Route4_Tx_CindyRematchIntro, Route4_Tx_CindyRematchDefeat
+		msgbox Route4_Tx_CindyPostRematch, MSGBOX_AUTOCLOSE
+		end
+
+	Route4_Tx_CindyIntro:
+		.string "We must have been fated to meet.\n"
+		.string "May I ask you for a battle?$"
+
+	Route4_Tx_CindyDefeat:
+		.string "Oh, my!$"
+
+	Route4_Tx_CindyPostBattle:
+		.string "“Hello” is the beginning of “good-bye.”\n"
+		.string "I hope we meet again.$"
+
+	Route4_Tx_CindyRegister1:
+		.string "Hello, we meet again.\p"
+		.string "We seem to be drawn together. Let's\n"
+		.string "register each other in our POKéNAVS.$"
+
+	Route4_Tx_CindyRegister2:
+		.string "We should commemorate how we seem\n"
+		.string "to be drawn to each other.\p"
+		.string "Let's register each other in our\n"
+		.string "POKéNAVS.$"
+
+	Route4_Tx_CindyRematchIntro:
+		.string "Hello, we meet again.\n"
+		.string "May I ask you for a battle?$"
+
+	Route4_Tx_CindyRematchDefeat:
+		.string "Oh, my…\n"
+		.string "I did the best that I could…$"
+
+	Route4_Tx_CindyPostRematch:
+		.string "“Hello” is the beginning of “good-bye.”\n"
+		.string "I hope we meet again.$"
+
+@@@@@@@@@@@@@@@@@@@@@@@
+@@@ here be dragons @@@
+@@@@@@@@@@@@@@@@@@@@@@@
+
 Route104_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, Route104_OnFrame
 	map_script MAP_SCRIPT_ON_TRANSITION, Route104_OnTransition
@@ -290,20 +485,8 @@ Route104_EventScript_ReceivedWhiteHerb::
 	release
 	end
 
-Route104_EventScript_Girl1::
-	msgbox Route104_Text_BrineyLivesInSeasideCottage, MSGBOX_NPC
-	end
-
-Route104_EventScript_BugCatcher::
-	msgbox Route104_Text_WhatsItLikeAtBottomOfSea, MSGBOX_SIGN
-	end
-
 Route104_EventScript_BrineysCottageSign::
 	msgbox Route104_Text_MrBrineysCottage, MSGBOX_SIGN
-	end
-
-Route104_EventScript_RouteSignPetalburg::
-	msgbox Route104_Text_RouteSignPetalburg, MSGBOX_SIGN
 	end
 
 Route104_EventScript_RouteSignRustboro::
@@ -316,14 +499,6 @@ Route104_EventScript_FlowerShopSign::
 
 Route104_EventScript_TrainerTipsDoubleBattles::
 	msgbox Route104_Text_TrainerTipsDoubleBattles, MSGBOX_SIGN
-	end
-
-Route104_EventScript_Boy1::
-	msgbox Route104_Text_ThrowBallAtWeakenedPokemon, MSGBOX_NPC
-	end
-
-Route104_EventScript_Woman::
-	msgbox Route104_Text_OnlyThrowBallAtWildPokemon, MSGBOX_NPC
 	end
 
 Route104_EventScript_Boy2::
@@ -340,10 +515,6 @@ Route104_EventScript_Boy2::
 Route104_EventScript_ReceivedBulletSeed::
 	msgbox Route104_Text_TMsAreOneTimeUse, MSGBOX_DEFAULT
 	release
-	end
-
-Route104_EventScript_Girl2::
-	msgbox Route104_Text_ImNotATrainer, MSGBOX_NPC
 	end
 
 Route104_EventScript_SailToDewford::
@@ -851,11 +1022,6 @@ Route104_EventScript_Ivan::
 	msgbox Route104_Text_IvanPostBattle, MSGBOX_AUTOCLOSE
 	end
 
-Route104_EventScript_Billy::
-	trainerbattle_single TRAINER_BILLY, Route104_Text_BillyIntro, Route104_Text_BillyDefeat
-	msgbox Route104_Text_BillyPostBattle, MSGBOX_AUTOCLOSE
-	end
-
 Route104_EventScript_Haley::
 	trainerbattle_single TRAINER_HALEY_1, Route104_Text_HaleyIntro, Route104_Text_HaleyDefeat, Route104_EventScript_TryRegisterHaleyAfterBattle
 	specialvar VAR_RESULT, ShouldTryRematchBattle
@@ -938,47 +1104,6 @@ Route104_EventScript_RematchWinston::
 	msgbox Route104_Text_WinstonPostRematch, MSGBOX_AUTOCLOSE
 	end
 
-Route104_EventScript_Cindy::
-	trainerbattle_single TRAINER_CINDY_1, Route104_Text_CindyIntro, Route104_Text_CindyDefeat, Route104_EventScript_TryRegisterCindyAfterBattle
-	specialvar VAR_RESULT, ShouldTryRematchBattle
-	goto_if_eq VAR_RESULT, TRUE, Route104_EventScript_RematchCindy
-	setvar VAR_0x8004, TRAINER_CINDY_1
-	specialvar VAR_RESULT, IsTrainerRegistered
-	goto_if_eq VAR_RESULT, FALSE, Route104_EventScript_TryRegisterCindy
-	msgbox Route104_Text_CindyPostBattle, MSGBOX_DEFAULT
-	release
-	end
-
-Route104_EventScript_TryRegisterCindyAfterBattle::
-	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	goto_if_set FLAG_HAS_MATCH_CALL, Route104_EventScript_RegisterCindyAfterBattle
-	release
-	end
-
-Route104_EventScript_RegisterCindyAfterBattle::
-	msgbox Route104_Text_CindyRegister2, MSGBOX_DEFAULT
-	register_matchcall TRAINER_CINDY_1
-	release
-	end
-
-Route104_EventScript_TryRegisterCindy::
-	goto_if_set FLAG_HAS_MATCH_CALL, Route104_EventScript_RegisterCindy
-	msgbox Route104_Text_CindyPostBattle, MSGBOX_DEFAULT
-	release
-	end
-
-Route104_EventScript_RegisterCindy::
-	msgbox Route104_Text_CindyRegister1, MSGBOX_DEFAULT
-	register_matchcall TRAINER_CINDY_1
-	release
-	end
-
-Route104_EventScript_RematchCindy::
-	trainerbattle_rematch TRAINER_CINDY_1, Route104_Text_CindyRematchIntro, Route104_Text_CindyRematchDefeat
-	msgbox Route104_Text_CindyPostRematch, MSGBOX_AUTOCLOSE
-	end
-
 Route104_EventScript_Gina::
 	trainerbattle_double TRAINER_GINA_AND_MIA_1, Route104_Text_GinaIntro, Route104_Text_GinaDefeat, Route104_Text_GinaNotEnoughMons
 	special GetPlayerBigGuyGirlString
@@ -992,41 +1117,6 @@ Route104_EventScript_Mia::
 	msgbox Route104_Text_MiaPostBattle, MSGBOX_DEFAULT
 	release
 	end
-
-Route104_EventScript_Darian::
-	trainerbattle_single TRAINER_DARIAN, Route104_Text_DarianIntro, Route104_Text_DarianDefeat
-	msgbox Route104_Text_DarianPostBattle, MSGBOX_AUTOCLOSE
-	end
-
-Route104_Text_BrineyLivesInSeasideCottage:
-	.string "That seaside cottage is where\n"
-	.string "MR. BRINEY lives.\p"
-	.string "He was once a mighty sailor who never\n"
-	.string "feared the sea, however stormy.$"
-
-Route104_Text_WhatsItLikeAtBottomOfSea:
-	.string "The sea, huh?\p"
-	.string "I wonder what it's like at the bottom\n"
-	.string "of the sea?$"
-
-Route104_Text_ThrowBallAtWeakenedPokemon:
-	.string "If you're going to throw a POKé BALL,\n"
-	.string "weaken the wild POKéMON first.\p"
-	.string "It will be easier to catch if it's been\n"
-	.string "poisoned, burned, or lulled to sleep.$"
-
-Route104_Text_OnlyThrowBallAtWildPokemon:
-	.string "You're a thief if you try to steal\n"
-	.string "someone else's POKéMON.\p"
-	.string "You should throw POKé BALLS only at\n"
-	.string "wild POKéMON.$"
-
-Route104_Text_ImNotATrainer:
-	.string "Oh, no, I'm not a TRAINER.\p"
-	.string "But that's right, if TRAINERS lock eyes,\n"
-	.string "it's a challenge to battle.\p"
-	.string "If you don't want to battle, stay out\n"
-	.string "of their sight.$"
 
 Route104_Text_LikeFillingMouthWithSeedsTakeThis:
 	.string "I like filling my mouth with seeds,\n"
@@ -1058,10 +1148,6 @@ Route104_Text_FlowerShopSellingSaplings:
 
 Route104_Text_MrBrineysCottage:
 	.string "MR. BRINEY'S COTTAGE$"
-
-Route104_Text_RouteSignPetalburg:
-	.string "ROUTE 1O4\n"
-	.string "{RIGHT_ARROW} PETALBURG CITY$"
 
 Route104_Text_RouteSignRustboro:
 	.string "ROUTE 1O4\n"

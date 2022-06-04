@@ -86,6 +86,7 @@ bool8 MetatileBehavior_IsBridgeOverWaterNoEdge(u8);
 bool8 MetatileBehavior_IsDefaultLandWildEncounter(u8);
 //bool8 MetatileBehavior_IsLandWildEncounter(u8);
 bool8 MetatileBehavior_IsDarkGrassWildEncounter(u8);
+bool8 MetatileBehavior_IsSandWildEncounter(u8);
 bool8 MetatileBehavior_IsWaterWildEncounter(u8);
 bool8 MetatileBehavior_IsIndoorEncounter(u8);
 bool8 MetatileBehavior_IsMountain(u8);

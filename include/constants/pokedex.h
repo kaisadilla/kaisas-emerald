@@ -971,6 +971,8 @@ enum
     HOENN_DEX_NIDORAN_M        ,
     HOENN_DEX_NIDORINO         ,
     HOENN_DEX_NIDOKING         ,
+    HOENN_DEX_SANDSHREW        ,
+    HOENN_DEX_SANDSLASH        ,
     HOENN_DEX_MINCCINO         ,
     HOENN_DEX_CINCCINO         ,
     HOENN_DEX_ZUBAT            ,

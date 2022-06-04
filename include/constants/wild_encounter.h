@@ -6,6 +6,7 @@
 #define ROCK_WILD_COUNT       5
 #define FISH_WILD_COUNT       10
 #define DARK_GRASS_WILD_COUNT 12
+#define SAND_WILD_COUNT       12
 
 #define NUM_ALTERING_CAVE_TABLES 9
 

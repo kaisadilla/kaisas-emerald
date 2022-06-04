@@ -34,6 +34,7 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_STAIRS_OUTSIDE_ABANDONED_SHIP]   = TILE_FLAG_UNUSED,
     [MB_SHOAL_CAVE_ENTRANCE]             = TILE_FLAG_UNUSED,
     [MB_DARK_GRASS]                      = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
+    [MB_WILD_SAND]                       = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
     [MB_ICE]                             = TILE_FLAG_UNUSED,
     [MB_SAND]                            = TILE_FLAG_UNUSED,
     [MB_SEAWEED]                         = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
@@ -179,7 +180,7 @@ bool8 MetatileBehavior_IsJumpSouth(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsPokeGrass(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_TALL_GRASS || metatileBehavior == MB_LONG_GRASS || metatileBehavior == MB_DARK_GRASS)
+    if (metatileBehavior == MB_TALL_GRASS || metatileBehavior == MB_LONG_GRASS || metatileBehavior == MB_DARK_GRASS || metatileBehavior == MB_WILD_SAND)
         return TRUE;
     else
         return FALSE;
@@ -187,7 +188,7 @@ bool8 MetatileBehavior_IsPokeGrass(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsSandOrDeepSand(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_SAND || metatileBehavior == MB_DEEP_SAND)
+    if (metatileBehavior == MB_SAND || metatileBehavior == MB_WILD_SAND || metatileBehavior == MB_DEEP_SAND)
         return TRUE;
     else
         return FALSE;
@@ -839,6 +840,10 @@ bool8 MetatileBehavior_IsDefaultLandWildEncounter (u8 metatileBehavior) {
 
 bool8 MetatileBehavior_IsDarkGrassWildEncounter (u8 metatileBehavior) {
     return metatileBehavior == MB_DARK_GRASS;
+}
+
+bool8 MetatileBehavior_IsSandWildEncounter (u8 metatileBehavior) {
+    return metatileBehavior == MB_WILD_SAND;
 }
 
 //bool8 MetatileBehavior_IsLandWildEncounter(u8 metatileBehavior) {
