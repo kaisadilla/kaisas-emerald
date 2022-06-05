@@ -4,6 +4,92 @@
 PetalburgWoods_MapScripts::
 	.byte 0
 
+@ ==================================================== @
+@ ============= Environment interactions ============= @
+@ ==================================================== @
+PetalburgWoods_EvtSign_Tip1::
+	msgbox PetalburgWoods_Tx_TrainerTipsExperience, MSGBOX_SIGN
+	end
+
+	PetalburgWoods_Tx_TrainerTipsExperience:
+		.string "- TRAINER TIPS -\p"
+		.string "Any Pokémon that appears even once\n"
+		.string "in a battle is awarded Exp. Points.\p"
+		.string "To raise a weak Pokémon, put it at the\n"
+		.string "left of the team list.\p"
+		.string "As soon as a battle starts, switch it\n"
+		.string "out. It will earn Exp. Points without\l"
+		.string "being exposed to any harm.$"
+
+@ ==================================================== @
+@ ================= NPC Interactions ================= @
+@ ==================================================== @
+PetalburgWoods_EvtNPC_Boy2::
+	msgbox PetalburgWoods_Tx_HiddenItemsExplanation, MSGBOX_NPC
+	end
+
+	PetalburgWoods_Tx_HiddenItemsExplanation:
+		.string "Sometimes, there are things on the\n"
+		.string "ground even if you can't see them.\p"
+		.string "That's why I always check where I'm\n"
+		.string "walking.$"
+
+@ ==================================================== @
+@ ===================== Trainers ===================== @
+@ ==================================================== @
+PetalburgWoods_EvtTrainer_Lyle::
+	trainerbattle_single TRAINER_LYLE, PetalburgWoods_Tx_LyleIntro, PetalburgWoods_Tx_LyleDefeat
+	msgbox PetalburgWoods_Tx_LylePostBattle, MSGBOX_AUTOCLOSE
+	end
+
+	PetalburgWoods_Tx_LyleIntro:
+		.string "I caught a whole bunch of Pokémon!\p"
+		.string "Go, go, go!\n"
+		.string "My Bug Pokémon team!$"
+
+	PetalburgWoods_Tx_LyleDefeat:
+		.string "I have all these Pokémon,\n"
+		.string "but I couldn't win…$"
+
+	PetalburgWoods_Tx_LylePostBattle:
+		.string "I caught a bunch of Pokémon.\n"
+		.string "Now I'm out of Poké Balls.$"
+
+PetalburgWoods_EvtTrainer_James::
+	trainerbattle_single TRAINER_JAMES_1, PetalburgWoods_Tx_JamesIntro, PetalburgWoods_Tx_JamesDefeat
+	msgbox PetalburgWoods_Tx_JamesPostBattle, MSGBOX_DEFAULT
+	end
+
+	PetalburgWoods_Tx_JamesIntro:
+		.string "If you take Bug Pokémon to school,\n"
+		.string "you get to be instantly popular!$"
+
+	PetalburgWoods_Tx_JamesDefeat:
+		.string "I can't be popular if I lose.$"
+
+	PetalburgWoods_Tx_JamesPostBattle:
+		.string "If you have a big Bug Pokémon,\n"
+		.string "people respect you for it.$"
+
+PetalburgWoods_EvtTrainer_Evora::
+	trainerbattle_single TRAINER_JAMES_2, PetalburgWoods_Tx_EvoraIntro, PetalburgWoods_Tx_EvoraDefeat
+	msgbox PetalburgWoods_Tx_EvoraPostBattle, MSGBOX_DEFAULT
+	end
+
+	PetalburgWoods_Tx_EvoraIntro:
+		.string "You have some Pokémon with you!\n"
+		.string "You're mine!$"
+
+	PetalburgWoods_Tx_EvoraDefeat:
+		.string "I thought I had you…$"
+
+	PetalburgWoods_Tx_EvoraPostBattle:
+		.string "You seem talented.\n"
+		.string "But I'll catch up, you'll see.$"
+
+@@@@@@@@@@@@@@@@@@@@@@@
+@@@ here be dragons @@@
+@@@@@@@@@@@@@@@@@@@@@@@
 PetalburgWoods_EventScript_DevonResearcherLeft::
 	lockall
 	call PetalburgWoods_EventScript_DevonResearcherIntro
@@ -244,10 +330,6 @@ PetalburgWoods_EventScript_Boy1::
 	msgbox PetalburgWoods_Text_StayOutOfTallGrass, MSGBOX_NPC
 	end
 
-PetalburgWoods_EventScript_Boy2::
-	msgbox PetalburgWoods_Text_HiddenItemsExplanation, MSGBOX_NPC
-	end
-
 PetalburgWoods_EventScript_Girl::
 	lock
 	faceplayer
@@ -264,59 +346,50 @@ PetalburgWoods_EventScript_ExplainMiracleSeed::
 	release
 	end
 
-PetalburgWoods_EventScript_Sign1::
-	msgbox PetalburgWoods_Text_TrainerTipsExperience, MSGBOX_SIGN
-	end
-
 PetalburgWoods_EventScript_Sign2::
 	msgbox PetalburgWoods_Text_TrainerTipsPP, MSGBOX_SIGN
 	end
 
-PetalburgWoods_EventScript_Lyle::
-	trainerbattle_single TRAINER_LYLE, PetalburgWoods_Text_GoBugPokemonTeam, PetalburgWoods_Text_ICouldntWin
-	msgbox PetalburgWoods_Text_ImOutOfPokeBalls, MSGBOX_AUTOCLOSE
-	end
-
-PetalburgWoods_EventScript_James::
-	trainerbattle_single TRAINER_JAMES_1, PetalburgWoods_Text_InstantlyPopularWithBugPokemon, PetalburgWoods_Text_CantBePopularIfILose, PetalburgWoods_EventScript_TryRegisterJames
-	specialvar VAR_RESULT, ShouldTryRematchBattle
-	goto_if_eq VAR_RESULT, TRUE, PetalburgWoods_EventScript_JamesRematch
-	setvar VAR_0x8004, TRAINER_JAMES_1
-	specialvar VAR_RESULT, IsTrainerRegistered
-	goto_if_eq VAR_RESULT, FALSE, PetalburgWoods_EventScript_TryRegisterJames2
-	msgbox PetalburgWoods_Text_PeopleRespectYou, MSGBOX_DEFAULT
-	release
-	end
-
-PetalburgWoods_EventScript_TryRegisterJames::
-	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	goto_if_set FLAG_HAS_MATCH_CALL, PetalburgWoods_EventScript_RegisterJames
-	release
-	end
-
-PetalburgWoods_EventScript_RegisterJames::
-	msgbox PetalburgWoods_Text_IWantRematch1, MSGBOX_DEFAULT
-	register_matchcall TRAINER_JAMES_1
-	release
-	end
-
-PetalburgWoods_EventScript_TryRegisterJames2::
-	goto_if_set FLAG_HAS_MATCH_CALL, PetalburgWoods_EventScript_RegisterJames2
-	msgbox PetalburgWoods_Text_PeopleRespectYou, MSGBOX_DEFAULT
-	release
-	end
-
-PetalburgWoods_EventScript_RegisterJames2::
-	msgbox PetalburgWoods_Text_IWantRematch2, MSGBOX_DEFAULT
-	register_matchcall TRAINER_JAMES_1
-	release
-	end
-
-PetalburgWoods_EventScript_JamesRematch::
-	trainerbattle_rematch TRAINER_JAMES_1, PetalburgWoods_Text_MyPokemonHaveGrown, PetalburgWoods_Text_CantBePopularIfLose
-	msgbox PetalburgWoods_Text_IveBeenTrainingHard, MSGBOX_AUTOCLOSE
-	end
+@__PetalburgWoods_EventScript_James::
+@	trainerbattle_single TRAINER_JAMES_1, PetalburgWoods_Text_InstantlyPopularWithBugPokemon, PetalburgWoods_Text_CantBePopularIfILose, PetalburgWoods_EventScript_TryRegisterJames
+@	specialvar VAR_RESULT, ShouldTryRematchBattle
+@	goto_if_eq VAR_RESULT, TRUE, PetalburgWoods_EventScript_JamesRematch
+@	setvar VAR_0x8004, TRAINER_JAMES_1
+@	specialvar VAR_RESULT, IsTrainerRegistered
+@	goto_if_eq VAR_RESULT, FALSE, PetalburgWoods_EventScript_TryRegisterJames2
+@	msgbox PetalburgWoods_Text_PeopleRespectYou, MSGBOX_DEFAULT
+@	release
+@	end
+@
+@	PetalburgWoods_EventScript_TryRegisterJames::
+@		special PlayerFaceTrainerAfterBattle
+@		waitmovement 0
+@		goto_if_set FLAG_HAS_MATCH_CALL, PetalburgWoods_EventScript_RegisterJames
+@		release
+@		end
+@
+@	PetalburgWoods_EventScript_RegisterJames::
+@		msgbox PetalburgWoods_Text_IWantRematch1, MSGBOX_DEFAULT
+@		register_matchcall TRAINER_JAMES_1
+@		release
+@		end
+@
+@	PetalburgWoods_EventScript_TryRegisterJames2::
+@		goto_if_set FLAG_HAS_MATCH_CALL, PetalburgWoods_EventScript_RegisterJames2
+@		msgbox PetalburgWoods_Text_PeopleRespectYou, MSGBOX_DEFAULT
+@		release
+@		end
+@
+@	PetalburgWoods_EventScript_RegisterJames2::
+@		msgbox PetalburgWoods_Text_IWantRematch2, MSGBOX_DEFAULT
+@		register_matchcall TRAINER_JAMES_1
+@		release
+@		end
+@
+@	PetalburgWoods_EventScript_JamesRematch::
+@		trainerbattle_rematch TRAINER_JAMES_1, PetalburgWoods_Text_MyPokemonHaveGrown, PetalburgWoods_Text_CantBePopularIfLose
+@		msgbox PetalburgWoods_Text_IveBeenTrainingHard, MSGBOX_AUTOCLOSE
+@		end
 
 PetalburgWoods_Text_NotAOneToBeFound:
 	.string "Hmmm…\n"
@@ -383,30 +456,6 @@ PetalburgWoods_Text_YoureLoadedWithItems:
 	.string "You're loaded with items.\n"
 	.string "I can't give you this GREAT BALL.$"
 
-PetalburgWoods_Text_GoBugPokemonTeam:
-	.string "I caught a whole bunch of POKéMON!\p"
-	.string "Go, go, go!\n"
-	.string "My BUG POKéMON team!$"
-
-PetalburgWoods_Text_ICouldntWin:
-	.string "I have all these POKéMON,\n"
-	.string "but I couldn't win…$"
-
-PetalburgWoods_Text_ImOutOfPokeBalls:
-	.string "I caught a bunch of POKéMON.\n"
-	.string "Now I'm out of POKé BALLS.$"
-
-PetalburgWoods_Text_InstantlyPopularWithBugPokemon:
-	.string "If you take BUG POKéMON to school,\n"
-	.string "you get to be instantly popular!$"
-
-PetalburgWoods_Text_CantBePopularIfILose:
-	.string "I can't be popular if I lose.$"
-
-PetalburgWoods_Text_PeopleRespectYou:
-	.string "If you have a big BUG POKéMON,\n"
-	.string "people respect you for it.$"
-
 PetalburgWoods_Text_IWantRematch1:
 	.string "I want a rematch when my BUG\n"
 	.string "POKéMON grow up!\p"
@@ -436,12 +485,6 @@ PetalburgWoods_Text_StayOutOfTallGrass:
 	.string "to avoid battles, you should stay out\l"
 	.string "of tall grass.$"
 
-PetalburgWoods_Text_HiddenItemsExplanation:
-	.string "Sometimes, there are things on the\n"
-	.string "ground even if you can't see them.\p"
-	.string "That's why I always check where I'm\n"
-	.string "walking.$"
-
 PetalburgWoods_Text_TryUsingThisItem:
 	.string "Oh, neat!\n"
 	.string "That's the BADGE from RUSTBORO GYM!\p"
@@ -455,16 +498,6 @@ PetalburgWoods_Text_MiracleSeedExplanation:
 	.string "Besides MIRACLE SEED, I think there are\n"
 	.string "other convenient items for POKéMON\l"
 	.string "to hold.$"
-
-PetalburgWoods_Text_TrainerTipsExperience:
-	.string "TRAINER TIPS\p"
-	.string "Any POKéMON that appears even once\n"
-	.string "in a battle is awarded EXP Points.\p"
-	.string "To raise a weak POKéMON, put it at the\n"
-	.string "left of the team list.\p"
-	.string "As soon as a battle starts, switch it\n"
-	.string "out. It will earn EXP Points without\l"
-	.string "being exposed to any harm.$"
 
 PetalburgWoods_Text_TrainerTipsPP:
 	.string "TRAINER TIPS\p"

@@ -841,3 +841,14 @@ gTileset_Petalburg_Extended::
 	.4byte gMetatiles_Petalburg_Extended
 	.4byte gMetatileAttributes_Petalburg_Extended
 	.4byte NULL
+
+	.align 2
+gTileset_gTileset_PetalburgForest::
+	.byte TRUE @ is compressed
+	.byte TRUE @ is secondary
+	.2byte 0
+	.4byte gTilesetTiles_gTileset_PetalburgForest
+	.4byte gTilesetPalettes_gTileset_PetalburgForest
+	.4byte gMetatiles_gTileset_PetalburgForest
+	.4byte gMetatileAttributes_gTileset_PetalburgForest
+	.4byte NULL

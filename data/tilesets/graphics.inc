@@ -1749,3 +1749,23 @@ gTilesetPalettes_Petalburg_Extended::
 	.align 2
 gTilesetTiles_Petalburg_Extended::
 	.incbin "data/tilesets/secondary/petalburg_extended/tiles.4bpp.lz"
+
+	.align 2
+gTilesetPalettes_gTileset_PetalburgForest::
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/00.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/01.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/02.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/03.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/04.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/05.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/06.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/07.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/08.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/09.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/10.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/11.gbapal"
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/palettes/12.gbapal"
+
+	.align 2
+gTilesetTiles_gTileset_PetalburgForest::
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/tiles.4bpp.lz"

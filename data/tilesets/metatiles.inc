@@ -565,3 +565,11 @@ gMetatiles_Petalburg_Extended::
 	.align 1
 gMetatileAttributes_Petalburg_Extended::
 	.incbin "data/tilesets/secondary/petalburg_extended/metatile_attributes.bin"
+
+	.align 1
+gMetatiles_gTileset_PetalburgForest::
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/metatiles.bin"
+
+	.align 1
+gMetatileAttributes_gTileset_PetalburgForest::
+	.incbin "data/tilesets/secondary/gtileset_petalburgforest/metatile_attributes.bin"
